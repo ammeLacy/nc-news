@@ -14,9 +14,10 @@ const {
 exports.seed = function (knex) {
   const topicsInsertions = knex('topics').insert(topicData);
   const usersInsertions = knex('users').insert(userData);
+  const articleInsertions = knex('articles').insert(formatDates(articleData));
 
-  return Promise.all([topicsInsertions, usersInsertions])
-    .then(() => {
+  return Promise.all([topicsInsertions, usersInsertions, articleInsertions])
+    .then((articleRows) => {
       /* 
       
       Your article data is currently in the incorrect format and will violate your SQL schema. 
@@ -25,6 +26,14 @@ exports.seed = function (knex) {
 
       Your comment insertions will depend on information from the seeded articles, so make sure to return the data after it's been seeded.
       */
+
+      // .then((houseRows) => {
+      //       const houseRef = createRef(houseRows, 'house_name', 'house_id');
+      //       const formattedWizards = formatWizards(wizardData, houseRef);
+      //       return knex('wizards')
+      //         .insert(formattedWizards)
+      //         .returning('*');
+
     })
     .then(articleRows => {
       /* 
