@@ -5,9 +5,13 @@ const {
   userData,
 } = require('../data/index.js');
 
-const { formatDates, formatComments, makeRefObj } = require('../utils/utils');
+const {
+  formatDates,
+  formatComments,
+  makeRefObj
+} = require('../utils/utils');
 
-exports.seed = function(knex, Promise) {
+exports.seed = function (knex) {
   const topicsInsertions = knex('topics').insert(topicData);
   const usersInsertions = knex('users').insert(userData);
 
