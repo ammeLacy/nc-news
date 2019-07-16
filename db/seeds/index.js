@@ -16,5 +16,10 @@ exports.seed = function (knex, Promise) {
       return knex('topics')
         .returning('*');
       // <-- do the rest of the seed logic here ...
-    });
+    })
+    .then(() => {
+      return knex('articles')
+        .returning('*');
+    })
+
 };

@@ -19,21 +19,38 @@ exports.formatDates = list => {
 
 };
 
-exports.makeRefObj = list => {};
+exports.makeRefObj = (list, key, val) => {
+  if (list === undefined) {
+    return [];
+  } else {
+    const lookupObj = {};
+    list.forEach(item => {
+      lookupObj[item[key]] = item[val];
+    })
+    return lookupObj;
+  };
+}
 
-exports.formatComments = (comments, articleRef) => {};
+exports.formatComments = (comments, articleRef) => {
+  if (comments === undefined || articleRef === undefined) {
+    return [];
+  } else {
+    const newLocal = this.formatDates(comments).map(comment => {
+      const {
+        created_by,
+        belongs_to,
+        ...restOfFields
+      } = comment;
+      return {
+        author: comment.created_by,
+        article_id: articleRef[belongs_to],
+        ...restOfFields
+      };
+    });
+    //console.log(newLocal);
+    return newLocal;
+  }
 
-// let timestamp = singleArticle[0].created_at;
-// let formattedDate = new Date(timestamp);
-// console.log(formattedDate);
 
-/*
- [{
-     title: 'Living in the shadow of a great man',
-     topic: 'mitch',
-     author: 'butter_bridge',
-     body: 'I find this existence challenging',
-     created_at: 1542284514171,
-     votes: 100,
-   },
-   */
+
+}
