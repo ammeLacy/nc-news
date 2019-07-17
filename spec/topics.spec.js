@@ -23,6 +23,49 @@ describe('/api', () => {
             );
           })
       });
+      describe('ERRORS', () => {
+        it('returns 404 and an error message when given an incorrect path', () => {
+          return request(app)
+            .get('/api/invalid_topic_route')
+            .expect(404)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('Not Found');
+            })
+        });
+        it('returns the default page when sent a query request', () => {
+          return request(app)
+            .get('/api/topics?greatTopic=true')
+            .expect(200)
+            .then(({
+              body
+            }) => {
+              expect(body.topics.topics[0].slug).to.eql('mitch');
+            })
+
+        });
+        describe('INVALID METHODS', () => {
+          it('status:405', () => {
+            const invalidMethods = ['patch', 'put', 'delete'];
+            const methodPromises = invalidMethods.map((method) => {
+              return request(app)[method]('/api/topics')
+                .expect(405)
+                .then(({
+                  body: {
+                    msg
+                  }
+                }) => {
+                  expect(msg).to.equal('method not allowed');
+                });
+            });
+            // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
+            return Promise.all(methodPromises);
+          });
+        });
+      });
     });
 
   });

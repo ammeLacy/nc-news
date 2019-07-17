@@ -3,6 +3,13 @@ const {
   sendTopics
 } = require('../controllers/topicControllers.js');
 
-topicsRouter.route('/').get(sendTopics);
+const {
+  send405Error
+} = require('../errors/errors.js')
+
+topicsRouter
+  .route('/')
+  .get(sendTopics)
+  .all(send405Error);
 
 module.exports = topicsRouter;

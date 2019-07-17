@@ -4,7 +4,7 @@ const {
 
 
 exports.sendTopics = (req, res, next) => {
-  console.log(' ** inside topicController');
+  //console.log(' ** inside topicController');
   selectTopics()
     .then(topicsArray => {
       const topics = {
