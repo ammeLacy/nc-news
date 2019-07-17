@@ -16,7 +16,6 @@ exports.formatDates = list => {
       };
     })
   }
-
 };
 
 exports.makeRefObj = (list, key, val) => {
@@ -35,7 +34,7 @@ exports.formatComments = (comments, articleRef) => {
   if (comments === undefined || articleRef === undefined) {
     return [];
   } else {
-    const newLocal = this.formatDates(comments).map(comment => {
+    const commentFormattedDate = this.formatDates(comments).map(comment => {
       const {
         created_by,
         belongs_to,
@@ -47,10 +46,6 @@ exports.formatComments = (comments, articleRef) => {
         ...restOfFields
       };
     });
-    //console.log(newLocal);
-    return newLocal;
+    return commentFormattedDate;
   }
-
-
-
 }

@@ -9,8 +9,6 @@ const {
   formatComments,
 } = require('../db/utils/utils');
 
-//exports.formatDates = list => {};
-
 describe('formatDates', () => {
   it('returns an empty array when list is undefined', () => {
     const actual = formatDates(undefined);
@@ -124,13 +122,6 @@ describe('makeRefObj', () => {
     expect(article[1]).to.not.include.key('Eight pug gifs that remind me of mitch');
   });
 });
-// {
-//   'Living in the shadow of a great man': 1
-// }
-
-// exports.formatComments = (comments, articleRef) => {
-
-// };
 
 describe('formatComments', () => {
   it('returns an empty array when comments or articleRef is undefined', () => {
