@@ -8,10 +8,11 @@ exports.sendUser = (req, res, next) => {
     .then(user => {
       if (user === undefined) {
         res.status(404).send();
+      } else {
+        res.status(200).send({
+          user
+        })
       }
-      res.status(200).send({
-        user
-      })
     })
     .catch(err => next(err));
 }
