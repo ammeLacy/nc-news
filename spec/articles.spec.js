@@ -44,6 +44,11 @@ describe.only('/api', () => {
           })
       });
     });
+    it('should return 404 for a requested article that does not exist', () => {
+      request(app)
+        .get('api/articles/99999')
+        .expect(404);
+    });
 
   });
 });
