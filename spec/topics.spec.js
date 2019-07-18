@@ -8,8 +8,8 @@ const app = require('../app.js');
 
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
-  describe('/topics', () => {
-    describe('/GET', () => {
+  describe('/GET', () => {
+    describe('/topics', () => {
       it('responds 200 and an array of topics', () => {
         return request(app)
           .get('/api/topics')
@@ -45,7 +45,6 @@ describe('/api', () => {
             }) => {
               expect(body.topics.topics[0].slug).to.eql('mitch');
             })
-
         });
         describe('INVALID METHODS', () => {
           it('status:405', () => {

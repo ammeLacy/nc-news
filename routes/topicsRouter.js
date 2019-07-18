@@ -5,7 +5,7 @@ const {
 
 const {
   send405Error
-} = require('../errors/errors.js')
+} = require('../errors/errors.js');
 
 topicsRouter
   .route('/')

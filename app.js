@@ -5,12 +5,12 @@ const {
   routeError,
 } = require('./errors/errors.js')
 
-
-
-app.use(express.json());
-
 //Routes
 app.use('/api', apiRouter);
+
+//insert JSON
+app.use(express.json());
+
 //Error handling
 app.all('/*', routeError);
 
