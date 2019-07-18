@@ -24,17 +24,10 @@ describe('/api', () => {
           })
       });
       describe('ERRORS', () => {
-        it('returns 404 and an error message when given an incorrect path', () => {
+        it('returns 404 when given an incorrect path', () => {
           return request(app)
             .get('/api/invalid_topic_route')
-            .expect(404)
-            .then(({
-              body: {
-                message
-              }
-            }) => {
-              expect(message).to.equal('Not Found');
-            })
+            .expect(404);
         });
         it('returns the default page when sent a query request', () => {
           return request(app)

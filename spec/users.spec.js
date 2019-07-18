@@ -42,23 +42,15 @@ describe('/api', () => {
           })
       });
       it('should return 404 when a username does not exist', () => {
-        // TO DO - check this to make handling consistent
         return request(app)
           .get('/api/users/none_existing_user')
           .expect(404)
       });
       describe('ERRORS', () => {
-        it('returns 404 and an error message when given an incorrect path', () => {
+        it('returns 404 when given an incorrect path', () => {
           return request(app)
             .get('/api/user/butter_bridge')
-            .expect(404)
-            .then(({
-              body: {
-                message
-              }
-            }) => {
-              expect(message).to.equal('Not Found');
-            })
+            .expect(404);
         });
         it('returns the default page for a user when passed a valid username and query string', () => {
           return request(app)

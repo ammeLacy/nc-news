@@ -1,5 +1,6 @@
 const connection = require('../db/connection.js');
 
+//TO DO refactor to handle multiple users
 exports.selectUser = (
   username
 ) => {

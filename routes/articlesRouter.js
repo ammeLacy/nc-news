@@ -4,7 +4,7 @@ const {
   sendArticle
 } = require('../controllers/articlesControllers.js');
 
-articlesRouter.route('/articles/:article_id').get(sendArticle)
+articlesRouter.route('/:article_id').get(sendArticle)
 
 // usersRouter
 //   .route('/:username')

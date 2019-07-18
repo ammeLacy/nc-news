@@ -8,11 +8,11 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-describe('/api', () => {
+describe.only('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/:article_id', () => {
-    describe.only('GET', () => {
-      it('should take an article id, and return an article object with keys author(username), article_id, body, topic, created_at, votes, comments_count', () => {
+    describe('GET', () => {
+      it('should take an article id, and return an article including keys author(username), article_id, body, topic, created_at, votes', () => {
         request(app)
           .get('/api/articles/1')
           .expect(200)
@@ -21,14 +21,26 @@ describe('/api', () => {
               article
             }
           }) => {
-            expect(article).to.have.all.keys(
+            expect(article[0]).to.include.keys(
               'author',
               'title',
               'body',
               'topic',
               'created_at',
-              'votes',
-              'comment_count')
+              'votes')
+          })
+      });
+      it('should return a comment count key that returns the number of comments for an article', () => {
+        request(app)
+          .get('/api/articles/1')
+          .expect(200)
+          .then(({
+            body: {
+              article
+            }
+          }) => {
+            expect(article[0]).to.include.key('comment_count');
+            expect(parseInt(article[0].comment_count)).to.equal(13);
           })
       });
     });

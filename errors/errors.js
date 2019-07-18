@@ -1,8 +1,6 @@
 exports.routeError = (req, res, next) => {
   //console.log('<<<<<<<< ROUTE ERROR')
-  res.status(404).send({
-    message: 'Not Found'
-  });
+  res.status(404).send();
 }
 
 exports.send405Error = (req, res, next) => {
