@@ -25,23 +25,3 @@ exports.updateArticle = (body, {
     })
     .returning('*');
 }
-
-// exports.updateTreasure = (body, {
-//   treasure_id
-// }) => {
-//   return connection('treasures')
-//     .where({
-//       treasure_id
-//     })
-//     .update(body)
-//     .returning('*')
-//     .then(rowArray => {
-//       if (rowArray.length === 0) {
-//         return Promise.reject({
-//           status: 404,
-//           msg: "not found"
-//         })
-//       } else {
-//         return rowArray;
-//       }
-//     })
