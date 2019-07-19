@@ -5,9 +5,6 @@ const {
   patchArticle
 } = require('../controllers/articlesControllers.js');
 
-const {
-  postComment
-} = require('../controllers/commentsControllers.js');
 
 const {
   send405Error
@@ -18,7 +15,6 @@ articlesRouter
   .route('/:article_id')
   .get(sendArticle)
   .patch(patchArticle)
-  .post(postComment)
   .all(send405Error);
 
 

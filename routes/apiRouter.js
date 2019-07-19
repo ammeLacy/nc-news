@@ -6,6 +6,6 @@ const commentsRouter = require('./commentsRouter')
 
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/users', usersRouter);
+apiRouter.use('/articles/:article_id/comments', commentsRouter);
 apiRouter.use('/articles', articlesRouter);
-apiRouter.use('/comments', commentsRouter);
 module.exports = apiRouter;

@@ -1,4 +1,6 @@
-const commentsRouter = require('express').Router();
+const commentsRouter = require('express').Router({
+  mergeParams: true
+});
 
 const {
   postComment
@@ -6,7 +8,7 @@ const {
 
 
 commentsRouter
-  .route('/comments')
-  .get(postComment)
+  .route('/')
+  .post(postComment)
 
 module.exports = commentsRouter;
