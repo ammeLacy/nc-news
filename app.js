@@ -5,14 +5,13 @@ const {
   routeError,
   SQLerrors,
   serverError
-} = require('./errors/errors.js')
-
-//Routes
-app.use('/api', apiRouter);
-
+} = require('./errors/errors.js');
 
 //insert JSON
 app.use(express.json());
+
+//Routes
+app.use('/api', apiRouter);
 
 //Error handling
 app.use(SQLerrors)

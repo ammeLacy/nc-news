@@ -3,7 +3,7 @@ const {
 } = require('../models/usersModels.js');
 
 exports.sendUser = (req, res, next) => {
-  console.log('inside User controller');
+  //console.log('inside User controller');
   selectUser(req.params)
     .then(user => {
       if (user === undefined) {

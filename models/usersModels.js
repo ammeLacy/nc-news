@@ -4,7 +4,7 @@ const connection = require('../db/connection.js');
 exports.selectUser = (
   username
 ) => {
-  console.log('inside Users Model');
+  //console.log('inside Users Model');
   return connection.select('*')
     .from('users')
     .where(
