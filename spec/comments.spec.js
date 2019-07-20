@@ -9,7 +9,7 @@ const request = require('supertest');
 const app = require('../app.js');
 
 
-describe.only('/api', () => {
+describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
     describe('GET', () => {
@@ -24,6 +24,18 @@ describe.only('/api', () => {
           }) => {
             expect(comments[0]).to.have.all.keys(
               'comment_id', 'votes', 'created_at', 'author', 'body');
+          })
+      });
+      it('returns 200 and an empty array for an article with no comments', () => {
+        return request(app)
+          .get('/api/articles/13/comments')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments.length).to.equal(0);
           })
       });
       describe('ERRORS', () => {
