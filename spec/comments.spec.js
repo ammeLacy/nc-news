@@ -11,8 +11,21 @@ const app = require('../app.js');
 
 describe.only('/api', () => {
   beforeEach(() => connection.seed.run());
-  describe('/comments', () => {
+  describe('/articles/article_id/comments', () => {
     describe('GET', () => {
+      it('returns 200 an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments[0]).to.have.all.keys(
+              'comment_id', 'votes', 'created_at', 'author', 'body');
+          })
+      });
       describe('ERRORS', () => {
 
       });
@@ -41,9 +54,81 @@ describe.only('/api', () => {
           })
       });
       describe('ERRORS', () => {
-
+        it('returns 404 if an invalid route is sent', () => {
+          return request(app)
+            .post('/api/articles/1/comment')
+            .send({
+              "username": "butter_bridge",
+              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            })
+            .expect(404);
+        });
+        it('returns 400 if a none existent article-id is sent', () => {
+          return request(app)
+            .post('/api/articles/99999/comments')
+            .send({
+              "username": "butter_bridge",
+              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.eql('article does not exist');
+            })
+        });
+        it('returns 400 if a none-existent username is sent ', () => {
+          return request(app)
+            .post('/api/articles/1/comments')
+            .send({
+              "username": "kathy",
+              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('author does not exist');
+            })
+        });
+        it('returns 400 if a username is not sent in the request body', () => {
+          return request(app)
+            .post('/api/articles/1/comments')
+            .send({
+              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('username must not be null');
+            })
+        });
+        it('returns 400 if a body is not not sent in the request body', () => {
+          return request(app)
+            .post('/api/articles/1/comments')
+            .send({
+              "username": "butter_bridge"
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('body must not be null');
+            })
+        });
+        it('returns 400 if username and body are not sent in the request body', () => {
+          return request(app)
+            .post('/api/articles/1/comments')
+            .send({})
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('username and body must not be null');
+            })
+        });
       });
     });
-
   });
 });
