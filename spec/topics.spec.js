@@ -24,12 +24,7 @@ describe('/api', () => {
           })
       });
       describe('ERRORS', () => {
-        it('returns 404 when given an incorrect path', () => {
-          return request(app)
-            .get('/api/invalid_topic_route')
-            .expect(404);
-        });
-        it('returns the default page when sent a query request', () => {
+        it('returns 200 and the default page when sent a query request', () => {
           return request(app)
             .get('/api/topics?greatTopic=true')
             .expect(200)
@@ -38,6 +33,11 @@ describe('/api', () => {
             }) => {
               expect(body.topics.topics[0].slug).to.eql('mitch');
             })
+        });
+        it('returns 404 when given an incorrect path', () => {
+          return request(app)
+            .get('/api/invalid_topic_route')
+            .expect(404);
         });
         describe('INVALID METHODS', () => {
           it('status:405', () => {

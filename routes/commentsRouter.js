@@ -13,4 +13,6 @@ commentsRouter
   .post(postComment)
   .get(getComments)
 
+//TO DO add invalid route handling
+
 module.exports = commentsRouter;

@@ -48,10 +48,17 @@ describe('/api', () => {
           .expect(404);
       });
       describe('ERRORS', () => {
-        it('returns 404 when given an incorrect path', () => {
+        it('returns 200 and the requested article when also passed a query in the request', () => {
           return request(app)
-            .get('/api/article/1')
-            .expect(404);
+            .get('/api/articles/1?greatArticle=true')
+            .expect(200)
+            .then(({
+              body: {
+                article
+              }
+            }) => {
+              expect(article[0].article_id).to.equal(1);
+            })
         });
         it('returns 400 when given an invalid format for the article_id - 1a', () => {
           return request(app)
@@ -73,17 +80,10 @@ describe('/api', () => {
               expect(body.message).to.equal('invalid input syntax for integer: "1.5"')
             })
         });
-        it('returns 200 and the requested article when also passed a query in the request', () => {
+        it('returns 404 when given an incorrect path', () => {
           return request(app)
-            .get('/api/articles/1?greatArticle=true')
-            .expect(200)
-            .then(({
-              body: {
-                article
-              }
-            }) => {
-              expect(article[0].article_id).to.equal(1);
-            })
+            .get('/api/article/1')
+            .expect(404);
         });
       });
     });

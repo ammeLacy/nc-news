@@ -47,12 +47,7 @@ describe('/api', () => {
           .expect(404)
       });
       describe('ERRORS', () => {
-        it('returns 404 when given an incorrect path', () => {
-          return request(app)
-            .get('/api/user/butter_bridge')
-            .expect(404);
-        });
-        it('returns the default page for a user when passed a valid username and query string', () => {
+        it('returns 200 and the default page for a user when passed a valid username and query string', () => {
           return request(app)
             .get('/api/users/butter_bridge?greatUser=true')
             .expect(200)
@@ -66,6 +61,12 @@ describe('/api', () => {
               expect(user.avatar_url).to.equal('https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg');
             })
         });
+        it('returns 404 when given an incorrect path', () => {
+          return request(app)
+            .get('/api/user/butter_bridge')
+            .expect(404);
+        });
+
         describe('INVALID METHODS', () => {
           it('status:405', () => {
             const invalidMethods = ['patch', 'put', 'delete'];
