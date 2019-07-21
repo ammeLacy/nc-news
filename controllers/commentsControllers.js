@@ -31,7 +31,6 @@ exports.postComment = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
   //console.log('inside get Comments controller');
-  //console.log(req.params)
   selectComments(req.params, req.query)
     .then(comments => {
       const alteredComments = comments.map(comment => {
