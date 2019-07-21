@@ -8,12 +8,11 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-
-describe('/api', () => {
+describe.only('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
     describe('GET', () => {
-      it('returns 200 an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
+      it('returns 200 and an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
         return request(app)
           .get('/api/articles/1/comments')
           .expect(200)
@@ -28,7 +27,7 @@ describe('/api', () => {
       });
       it('returns 200 and an empty array for an article with no comments', () => {
         return request(app)
-          .get('/api/articles/13/comments')
+          .get('/api/articles/14/comments')
           .expect(200)
           .then(({
             body: {
@@ -37,6 +36,38 @@ describe('/api', () => {
           }) => {
             expect(comments.length).to.equal(0);
           })
+      });
+      it('returns comments sorted by created_at as a default sort order', () => {
+        return request(app)
+          .get('/api/articles/15/comments')
+          .send()
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments).to.be.sortedBy('created_at', {
+              descending: true
+            });
+          })
+      });
+      it('returns comments sorted by field specified in the query string', () => {
+        const queries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
+        const queriedFields = queries.map(query => {
+          return request(app)
+            .get(`/api/articles/15/comments?sort_by=${query}`)
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy(query, {
+                descending: true
+              });
+              return Promise.all(queriedFields);
+            })
+        })
       });
       describe('ERRORS', () => {
 

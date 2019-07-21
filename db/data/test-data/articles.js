@@ -89,5 +89,19 @@ module.exports = [{
     author: 'icellusedkars',
     body: 'Mauris rhoncus efficitur vehicula.',
     created_at: 1563638481,
+  },
+  {
+    title: 'more chocolate',
+    topic: 'food',
+    author: 'icellusedkars',
+    body: 'Aliquam porta metus eget dictum sollicitudin.',
+    created_at: 1563643204,
+  },
+  {
+    title: 'more chocolate',
+    topic: 'food',
+    author: 'icellusedkars',
+    body: 'Aliquam porta metus eget dictum sollicitudin.',
+    created_at: 1563643251,
   }
 ];

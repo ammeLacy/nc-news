@@ -18,7 +18,9 @@ exports.insertComment = (body, {
 }
 
 exports.selectComments = ({
-  article_id
+  article_id,
+  sort_by = 'created_at',
+  order = 'desc'
 }) => {
   //console.log('inside selectComments  model')
   //console.log(article_id)
@@ -26,6 +28,6 @@ exports.selectComments = ({
   return connection('comments')
     .where({
       article_id
-    })
+    }).orderBy(sort_by, order)
     .returning('*');
 }
