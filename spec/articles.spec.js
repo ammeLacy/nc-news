@@ -53,14 +53,24 @@ describe('/api', () => {
             .get('/api/article/1')
             .expect(404);
         });
-        it('returns 400 when given an invalid format for the article_id', () => {
+        it('returns 400 when given an invalid format for the article_id - 1a', () => {
           return request(app)
             .get('/api/articles/1a')
             .expect(400)
             .then(({
               body
             }) => {
-              expect(body.message).to.eql('invalid input syntax for integer: "1a"');
+              expect(body.message).to.equal('invalid input syntax for integer: "1a"');
+            })
+        });
+        it('returns 400 when given an invalid format for the article_id - 1.5', () => {
+          return request(app)
+            .get('/api/articles/1.5')
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('invalid input syntax for integer: "1.5"')
             })
         });
         it('returns 200 and the requested article when also passed a query in the request', () => {
@@ -72,7 +82,7 @@ describe('/api', () => {
                 article
               }
             }) => {
-              expect(article[0].article_id).to.eql(1);
+              expect(article[0].article_id).to.equal(1);
             })
         });
       });
@@ -120,22 +130,6 @@ describe('/api', () => {
           .expect(404);
       });
       describe('ERRORS', () => {
-        it('returns 404 when passed an incorrect path', () => {
-          return request(app)
-            .patch('/api/article/1')
-            .send({
-              "inc_votes": 1
-            })
-            .expect(404);
-        });
-        it('returns 400 when passed an incorrect article_id format', () => {
-          return request(app)
-            .patch('/api/articles/1a')
-            .send({
-              "inc_votes": 1
-            })
-            .expect(400);
-        });
         it('returns 200 and article, and updated vote count when passed an query string in addition to the vote count', () => {
           return request(app)
             .patch('/api/articles/1')
@@ -156,6 +150,27 @@ describe('/api', () => {
                 "votes": 101,
               })
             });
+        });
+        it('returns 400 when passed an incorrect article_id format', () => {
+          return request(app)
+            .patch('/api/articles/1a')
+            .send({
+              "inc_votes": 1
+            })
+            .expect(400);
+        });
+        it('returns 400 and error message when given a number of votes outside of the range of integer', () => {
+          return request(app)
+            .patch('/api/articles/1')
+            .send({
+              "inc_votes": 99999999999999
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('integer out of range');
+            })
         });
         it('returns 400 when passed an invalid value is sent to increase the vote count', () => {
           return request(app)
@@ -182,6 +197,14 @@ describe('/api', () => {
             }) => {
               expect(body.message).to.eql('column "undefined" does not exist');
             })
+        });
+        it('returns 404 when passed an incorrect path', () => {
+          return request(app)
+            .patch('/api/article/1')
+            .send({
+              "inc_votes": 1
+            })
+            .expect(404);
         });
       });
     });

@@ -12,6 +12,8 @@ exports.SQLerrors = (err, req, res, next) => {
       42703: err.message, // column does not exist
       23502: err.message, //not_null_violation 
       23503: err.message, //foreign_key_violation
+      22001: err.message, // string_data_right_truncation - data to long for field
+      22003: err.message, // 	numeric_value_out_of_range
       "22P02": err.message //	invalid_text_representation
     }
 
@@ -20,6 +22,8 @@ exports.SQLerrors = (err, req, res, next) => {
       message = errCodes[err.code].split('constraint')[1].split('_')[1] + ' does not exist';
     } else if (err.code === '23502') {
       message = errCodes[err.code].split(' * ')[1].split('"')[1] + " cannot be null";
+    } else if (err.code === '22001') {
+      message = errCodes[err.code].split(' - ')[1].split(' varying')[0];
     } else {
       message = errCodes[err.code].split(' - ')[1];
     }

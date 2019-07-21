@@ -8,7 +8,7 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-describe.only('/api', () => {
+describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
     describe('GET', () => {
@@ -86,10 +86,27 @@ describe.only('/api', () => {
         })
       });
       describe('ERRORS', () => {
-        it('returns 404 if an invalid route is sent', () => {
+        it('returns 400 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
           return request(app)
-            .get('/api/articles/1/comment')
-            .expect(404);
+            .get('/api/articles/15/comments?sort_by=author&order=asc&sort_by=created_at')
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy('author');
+            })
+        });
+        it('returns 400 and error message if passed an invalid order', () => {
+          return request(app)
+            .get('/api/articles/15/comments?order=up')
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('invalid sort order')
+            })
         });
         it('returns 400 if an invalid format for the article-id is sent', () => {
           return request(app)
@@ -100,6 +117,21 @@ describe.only('/api', () => {
             }) => {
               expect(body.message).to.equal('invalid input syntax for integer: "1a"');
             })
+        });
+        it('returns 400 and an error message if a none-existent query is sent ', () => {
+          return request(app)
+            .get('/api/articles/1/comments?sort_by=none_existingQuery')
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('column "none_existingQuery" does not exist');
+            })
+        });
+        it('returns 404 if an invalid route is sent', () => {
+          return request(app)
+            .get('/api/articles/1/comment')
+            .expect(404);
         });
       });
     });
@@ -139,14 +171,19 @@ describe.only('/api', () => {
       });
 
       describe('ERRORS', () => {
-        it('returns 404 if an invalid route is sent', () => {
+        it('ignores query string and returns 201 and created comment if passed a query string', () => {
           return request(app)
-            .post('/api/articles/1/comment')
+            .post('/api/articles/1/comments?sort_by=created_at')
             .send({
               "username": "butter_bridge",
               "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             })
-            .expect(404);
+            .expect(201)
+            .then(({
+              body
+            }) => {
+              expect(body.comment[0].body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
+            })
         });
         it('returns 400 if a none existent article-id is sent', () => {
           return request(app)
@@ -226,6 +263,29 @@ describe.only('/api', () => {
             }) => {
               expect(body.message).to.equal('username and body must not be null');
             })
+        });
+        it('returns 400 if the username is longer than 255 characters', () => {
+          return request(app)
+            .post('/api/articles/1/comments')
+            .send({
+              "username": `Curabitur placerat maximus condimentum. Nullam id enim ligula. Phasellus eu dignissim velit, et condimentum mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras ultricies malesuada urna, ut tempus sem feugiat sit amet. Duis id felis ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras et libero a lorem mattis dictum non sed dui. Duis in lacus eget est vestibulum maximus. Mauris ante dolor, eleifend vel pulvinar eget, tincidunt ut leo.",`,
+              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('value too long for type character');
+            })
+        });
+        it('returns 404 if an invalid route is sent', () => {
+          return request(app)
+            .post('/api/articles/1/comment')
+            .send({
+              "username": "butter_bridge",
+              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            })
+            .expect(404);
         });
       });
     });

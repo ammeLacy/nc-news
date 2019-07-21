@@ -31,19 +31,26 @@ exports.postComment = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
   //console.log('inside get Comments controller');
-  selectComments(req.params, req.query)
-    .then(comments => {
-      const alteredComments = comments.map(comment => {
-        const {
-          article_id,
-          ...otherFields
-        } = comment;
-        return {
-          ...otherFields
-        };
-      })
-      res.status(200).send({
-        comments: alteredComments
-      })
-    }).catch(next)
+  console.log(req.query.order)
+  if (req.query.order !== 'asc' && req.query.order !== 'desc' && req.query.order !== undefined) {
+    res.status(400).send({
+      message: 'invalid sort order'
+    })
+  } else {
+    selectComments(req.params, req.query)
+      .then(comments => {
+        const alteredComments = comments.map(comment => {
+          const {
+            article_id,
+            ...otherFields
+          } = comment;
+          return {
+            ...otherFields
+          };
+        })
+        res.status(200).send({
+          comments: alteredComments
+        })
+      }).catch(next)
+  }
 }
