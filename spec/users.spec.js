@@ -8,6 +8,8 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
+//what about capitlistation? re-do model to obtain getting all. and get1
+
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/users/:username', () => {

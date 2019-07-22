@@ -182,7 +182,7 @@ describe('/api', () => {
             .then(({
               body
             }) => {
-              expect(body.message).to.eql('column "a" does not exist');
+              expect(body.message).to.eql('votes should be whole numbers');
             })
         });
         it('returns 400 when passed an incorrect column to update in the request body', () => {
@@ -195,7 +195,21 @@ describe('/api', () => {
             .then(({
               body
             }) => {
-              expect(body.message).to.eql('column "undefined" does not exist');
+              expect(body.message).to.equal('column "undefined" does not exist');
+            })
+        });
+        it('returns 400 when passed a floating point number to update the vote count', () => {
+          return request(app)
+            .patch('/api/articles/1')
+            .send({
+              "inc_votes": 1.5
+            })
+            .expect(400)
+
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('votes should be whole numbers')
             })
         });
         it('returns 404 when passed an incorrect path', () => {
