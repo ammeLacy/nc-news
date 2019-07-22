@@ -290,7 +290,22 @@ describe('/api', () => {
       });
     });
     describe('INVALID ROUTES', () => {
-
+      it('status:405', () => {
+        const invalidMethods = ['put', 'delete']; // will need amending to allow delete 
+        const methodPromises = invalidMethods.map((method) => {
+          return request(app)[method]('/api/articles/1/comments')
+            .expect(405)
+            .then(({
+              body: {
+                msg
+              }
+            }) => {
+              expect(msg).to.equal('method not allowed');
+            });
+        });
+        // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
+        return Promise.all(methodPromises);
+      });
     });
   });
 });
