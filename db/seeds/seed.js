@@ -17,6 +17,7 @@ exports.seed = function (knex) {
 
   return Promise.all([topicsInsertions, usersInsertions])
     .then(() => {
+      knex.raw('ALTER TABLE articles auto_increment = 1');
       return knex('articles').insert(formatDates(articleData)).returning('*');
       /* 
       

@@ -1,11 +1,15 @@
 const {
-  selectArticle,
+  selectArticles,
   updateArticle
 } = require('../models/articlesModels.js');
 
-exports.sendArticle = (req, res, next) => {
-  //console.log('inside sendArticle controller');
-  selectArticle(req.params)
+exports.sendArticles = (req, res, next) => {
+  // console.log('inside sendArticle controller');
+  console.log(req.query)
+  selectArticles({
+      ...req.params,
+      ...req.query
+    })
     .then(article => {
       if (article.length === 0) {
         res.status(404).send();
