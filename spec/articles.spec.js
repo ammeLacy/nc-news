@@ -1,6 +1,6 @@
 process.env.NODE_ENV = "test";
 
-//requirments
+//requirements
 const connection = require('../db/connection.js');
 const chai = require('chai');
 chai.use(require("chai-sorted"));
@@ -60,10 +60,10 @@ describe('/api', () => {
           }))
       });
       it('returns articles sorted by field specified in the query string descending', () => {
-        const queries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
+        const queries = ['author', 'title', 'article_id', 'topic', 'votes', 'comment_count'];
         const queriedFields = queries.map(query => {
           return request(app)
-            .get(`/api/articles/15/comments?sort_by=${query}`)
+            .get(`/api/articles?sort_by=${query}`)
             .expect(200)
             .then(({
               body: {
@@ -77,7 +77,38 @@ describe('/api', () => {
             })
         })
       });
+      it('returns articles sorted by field specified in the query string ascending', () => {
+        const queries = ['author', 'title', 'article_id', 'topic', 'votes', 'comment_count'];
+        const queriedFields = queries.map(query => {
+          return request(app)
+            .get(`/api/articles?sort_by=${query}`)
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              console.log(comments, '--------------------', query)
+              expect(comments).to.be.sortedBy(query);
+              return Promise.all(queriedFields);
+            })
+        })
+      });
       describe('ERRORS', () => {
+        it('returns 200 and default sort order of created_at when passed an invalid column to query by', () => {
+          return request(app)
+            .get('/api/articles?sort_by=body')
+            .expect(200)
+            .then(({
+              body: (({
+                article
+              }) => {
+                expect(article).to.be.sortedBy('created_at'), {
+                  descending: true
+                }
+              })
+            }))
+        });
         it('returns 404 when given an incorrect path', () => {
           return request(app)
             .get('/api/article')

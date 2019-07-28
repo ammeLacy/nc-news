@@ -27,22 +27,53 @@ exports.sendArticle = (req, res, next) => {
   }
 }
 
+// author which is the username from the users table
+// title
+// article_id
+// topic
+// created_at
+// votes
+// comment_count which is the total count of all the comments with this article_id - you should make use of knex queries in order to ac
+
 exports.sendArticles = (req, res, next) => {
   // console.log('inside sendArticle controller');
-  //console.log(req.query)
-  selectArticles(
-      req.query
-    )
-    .then(article => {
-      if (article.length === 0) {
-        res.status(404).send();
-      } else {
-        res.status(200).send({
-          article
-        })
-      }
-    })
-    .catch(err => next(err));
+  //console.log(req.query.sort_by);
+  const {
+    sort_by
+  } = req.query;
+
+  const permittedQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
+  if (permittedQueries.includes(sort_by)) {
+    selectArticles(
+        sort_by
+      )
+      .then(article => {
+        if (article.length === 0) {
+          res.status(404).send();
+        } else {
+          res.status(200).send({
+            article
+          })
+        }
+      })
+      .catch(err => next(err));
+  } else {
+    selectArticles(
+        'created_at'
+      )
+      .then(article => {
+        if (article.length === 0) {
+          res.status(404).send();
+        } else {
+          res.status(200).send({
+            article
+          })
+        }
+      })
+      .catch(err => next(err));
+  }
+
+
 }
 
 

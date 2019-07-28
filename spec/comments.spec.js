@@ -86,7 +86,8 @@ describe('/api', () => {
         })
       });
       describe('ERRORS', () => {
-        it('returns 400 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
+        //check this test!
+        it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
           return request(app)
             .get('/api/articles/15/comments?sort_by=author&order=asc&sort_by=created_at')
             .expect(200)
