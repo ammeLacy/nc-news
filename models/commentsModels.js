@@ -27,6 +27,7 @@ exports.selectComments = ({
   //console.log(article_id)
   //console.log(connection)
   // console.log(order)
+  console.log(sort_by)
   return connection('comments')
     .where({
       article_id

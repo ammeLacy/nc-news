@@ -11,7 +11,7 @@ const app = require('../app.js');
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
-    describe.only('GET', () => {
+    describe('GET', () => {
       it('returns 200 and an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
         return request(app)
           .get('/api/articles/1/comments')
