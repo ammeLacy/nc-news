@@ -41,7 +41,7 @@ exports.send405Error = (req, res, next) => {
 
 exports.serverError = (err, req, res, next) => {
   console.log("<<<<<<< SERVER ERROR");
-  //console.log(err)
+  console.log(err)
   res.status(500).send({
     msg: 'internal server error'
   });

@@ -11,7 +11,7 @@ const app = require('../app.js');
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles', () => {
-    describe('GET', () => {
+    describe.only('GET', () => {
       it('responds  200 and an array of article objects, each of which has an author, title, article_id, topic, created_at, votes and comment_count keys, ', () => {
         return request(app)
           .get('/api/articles')
@@ -24,13 +24,11 @@ describe('/api', () => {
             expect(article[article.length - 1]).to.include.keys(
               'author',
               'title',
-              'body',
               'topic',
               'created_at',
               'votes')
             expect(article[0]).to.include.keys('author',
               'title',
-              'body',
               'topic',
               'created_at',
               'votes');
@@ -48,7 +46,7 @@ describe('/api', () => {
             expect(parseInt(article[14].comment_count)).to.equal(0);
           })
       });
-      it('returns comments sorted by date (created_at) as the default sort order and descending as the default order ', () => {
+      it('returns articles sorted by date (created_at) as the default sort order and descending as the default order ', () => {
         return request(app)
           .get('/api/articles')
           .then(({
@@ -60,6 +58,24 @@ describe('/api', () => {
               }
             })
           }))
+      });
+      it('returns articles sorted by field specified in the query string descending', () => {
+        const queries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
+        const queriedFields = queries.map(query => {
+          return request(app)
+            .get(`/api/articles/15/comments?sort_by=${query}`)
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy(query, {
+                descending: true
+              });
+              return Promise.all(queriedFields);
+            })
+        })
       });
       describe('ERRORS', () => {
         it('returns 404 when given an incorrect path', () => {
@@ -146,7 +162,7 @@ describe('/articles/:article_id ', () => {
           .then(({
             body
           }) => {
-            expect(body.message).to.equal('invalid input syntax for integer: "1a"');
+            expect(body.message).to.equal('Invalid article id');
           })
       });
       it('returns 400 when given an invalid format for the article_id - 1.5', () => {
@@ -156,7 +172,7 @@ describe('/articles/:article_id ', () => {
           .then(({
             body
           }) => {
-            expect(body.message).to.equal('invalid input syntax for integer: "1.5"')
+            expect(body.message).to.equal('Invalid article id')
           })
       });
       it('returns 404 when given an incorrect path', () => {
