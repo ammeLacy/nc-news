@@ -37,20 +37,42 @@ exports.getComments = (req, res, next) => {
       message: 'invalid sort order'
     })
   } else {
-    selectComments(req.params, req.query)
-      .then(comments => {
-        const alteredComments = comments.map(comment => {
-          const {
-            article_id,
-            ...otherFields
-          } = comment;
-          return {
-            ...otherFields
-          };
-        })
-        res.status(200).send({
-          comments: alteredComments
-        })
-      }).catch(next)
+    const {
+      sort_by
+    } = req.query;
+    const permittedQueries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
+    if (permittedQueries.includes(sort_by)) {
+      selectComments(req.params, req.query)
+        .then(comments => {
+          const alteredComments = comments.map(comment => {
+            const {
+              article_id,
+              ...otherFields
+            } = comment;
+            return {
+              ...otherFields
+            };
+          })
+          res.status(200).send({
+            comments: alteredComments
+          })
+        }).catch(next)
+    } else {
+      selectComments(req.params, 'created_at')
+        .then(comments => {
+          const alteredComments = comments.map(comment => {
+            const {
+              article_id,
+              ...otherFields
+            } = comment;
+            return {
+              ...otherFields
+            };
+          })
+          res.status(200).send({
+            comments: alteredComments
+          })
+        }).catch(next)
+    }
   }
 }

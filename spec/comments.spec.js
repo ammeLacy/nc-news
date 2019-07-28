@@ -11,7 +11,7 @@ const app = require('../app.js');
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
-    describe('GET', () => {
+    describe.only('GET', () => {
       it('returns 200 and an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
         return request(app)
           .get('/api/articles/1/comments')
@@ -86,10 +86,23 @@ describe('/api', () => {
         })
       });
       describe('ERRORS', () => {
-        //check this test!
+        it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
+          return request(app) //?sort_by=body
+            .get('/api/articles/15/comments?sort_by=invalid_query')
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy('created_at', {
+                descending: true
+              });
+            })
+        });
         it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
           return request(app)
-            .get('/api/articles/15/comments?sort_by=author&order=asc&sort_by=created_at')
+            .get('/api/articles/15/comments?sort_by=author&sort_by=created_at&order=asc')
             .expect(200)
             .then(({
               body: {
@@ -117,16 +130,6 @@ describe('/api', () => {
               body
             }) => {
               expect(body.message).to.equal('invalid input syntax for integer: "1a"');
-            })
-        });
-        it('returns 400 and an error message if a none-existent query is sent ', () => {
-          return request(app)
-            .get('/api/articles/1/comments?sort_by=none_existingQuery')
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('column "none_existingQuery" does not exist');
             })
         });
         it('returns 404 if an invalid route is sent', () => {
