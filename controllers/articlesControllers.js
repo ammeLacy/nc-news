@@ -40,7 +40,8 @@ exports.sendArticles = (req, res, next) => {
     const permittedQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
     let ordering = {
       order,
-      author
+      author,
+      topic
     };
     if (permittedQueries.includes(sort_by)) {
       ordering.sort_by = sort_by;

@@ -93,9 +93,7 @@ describe('/api', () => {
             })
         })
       })
-
-
-      it.only('returns 200 and all the articles for a given author if they exist', () => {
+      it('returns 200 and all the articles for a given author if the author exists', () => {
         return request(app)
           .get('/api/articles?author=butter_bridge')
           .expect(200)
@@ -104,12 +102,32 @@ describe('/api', () => {
               articles
             }
           }) => {
-            console.log(articles[0].author)
-            expect(articles[articles.length - 1].author).to.eql('butter_bridge');
-            //console.log(array1.every(num => num < 40));
-            //console.log(articles.every(article => article.author === 'butter_bridge'));
-            expect(articles.every(article => article.author === 'butter_bridge'));
+            expect(articles.every(article => article.author === 'butter_bridge')).to.equal(true);
+            expect(!articles.includes('icellusedkars')).to.equal(true);
           })
+      });
+      it('returns 200 and all articles for a given topic if the topic exists', () => {
+        return request(app)
+          .get('/api/articles?topic=mitch')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.every(article => article.topic === 'mitch')).to.equal(true);
+            expect(!articles.includes('cats')).to.equal(true);
+          })
+      });
+      it('returns 404 when a non existant username is given', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridger')
+          .expect(404);
+      });
+      it('returns 404 when a none existant topic is given ', () => {
+        return request(app)
+          .get('/api/articles?topic=trees')
+          .expect(404);
       });
       describe('ERRORS', () => {
         it('returns 200 and default sort order of created_at when passed an invalid column to query by', () => {

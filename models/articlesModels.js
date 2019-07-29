@@ -19,20 +19,27 @@ const connection = require('../db/connection.js');
 exports.selectArticles = ({
   sort_by = 'created_at',
   order = 'desc',
-  author
+  author,
+  topic
 }) => {
-  console.log('Author in selectArticles is ', author);
   return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
     .count({
       comment_count: 'comment_id'
     })
-    .from('articles') //articles.author, author 
+    .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id').orderBy(sort_by, order)
     .modify((query) => {
-      if (author) query.where(
-        'articles.author', author
-      )
+      if (author) {
+        query.where(
+          'articles.author', author
+        )
+      }
+      if (topic) {
+        query.where(
+          'articles.topic', topic
+        )
+      }
     })
 }
 
