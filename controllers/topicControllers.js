@@ -10,7 +10,6 @@ exports.sendTopics = (req, res, next) => {
       const topics = {
         topics: topicsArray
       };
-      //console.log(topics)
       res.status(200).send({
         topics
       })

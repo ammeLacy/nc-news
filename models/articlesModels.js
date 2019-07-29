@@ -1,13 +1,27 @@
 const connection = require('../db/connection.js');
 
+
+// ``
+// `js
+// // ./models/films.js
+// exports.getFilms = ({ limit, film_id }) => {
+//   return connection
+//     .select('*')
+//     .from('films')
+//     .limit(limit || 10)
+//     .modify((query) => {
+//       if (film_id) query.where({ film_id }).first();
+//     });
+// };
+// `
+
 //TO DO refactor to handle  filters
 exports.selectArticles = ({
   sort_by = 'created_at',
-  order = 'desc'
+  order = 'desc',
+  author
 }) => {
-  // console.log('===============================')
-  // console.log(article_id)
-  // console.log(sort_by)
+  console.log('Author in selectArticles is ', author);
   return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
     .count({
       comment_count: 'comment_id'
@@ -15,7 +29,13 @@ exports.selectArticles = ({
     .from('articles') //articles.author, author 
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id').orderBy(sort_by, order)
+    .modify((query) => {
+      if (author) query.where(
+        'articles.author', author
+      )
+    })
 }
+
 
 exports.selectArticle = (
   article_id

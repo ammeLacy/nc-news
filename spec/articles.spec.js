@@ -18,16 +18,16 @@ describe('/api', () => {
           .expect(200)
           .then(({
             body: {
-              article
+              articles
             }
           }) => {
-            expect(article[article.length - 1]).to.include.keys(
+            expect(articles[articles.length - 1]).to.include.keys(
               'author',
               'title',
               'topic',
               'created_at',
               'votes')
-            expect(article[0]).to.include.keys('author',
+            expect(articles[0]).to.include.keys('author',
               'title',
               'topic',
               'created_at',
@@ -39,11 +39,11 @@ describe('/api', () => {
           .get('/api/articles')
           .then(({
             body: {
-              article
+              articles
             }
           }) => {
-            expect(article[14]).to.include.key('comment_count');
-            expect(parseInt(article[14].comment_count)).to.equal(0);
+            expect(articles[14]).to.include.key('comment_count');
+            expect(parseInt(articles[14].comment_count)).to.equal(0);
           })
       });
       it('returns articles sorted by date (created_at) as the default sort order and descending as the default order ', () => {
@@ -51,9 +51,9 @@ describe('/api', () => {
           .get('/api/articles')
           .then(({
             body: (({
-              article
+              articles
             }) => {
-              expect(article).to.be.sortedBy('created_at'), {
+              expect(articles).to.be.sortedBy('created_at'), {
                 descending: true
               }
             })
@@ -67,10 +67,10 @@ describe('/api', () => {
             .expect(200)
             .then(({
               body: {
-                comments
+                article
               }
             }) => {
-              expect(comments).to.be.sortedBy(query, {
+              expect(article).to.be.sortedBy(query, {
                 descending: true
               });
               return Promise.all(queriedFields);
@@ -85,13 +85,31 @@ describe('/api', () => {
             .expect(200)
             .then(({
               body: {
-                comments
+                articles
               }
             }) => {
-              expect(comments).to.be.sortedBy(query);
+              expect(articles).to.be.sortedBy(query);
               return Promise.all(queriedFields);
             })
         })
+      })
+
+
+      it.only('returns 200 and all the articles for a given author if they exist', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            console.log(articles[0].author)
+            expect(articles[articles.length - 1].author).to.eql('butter_bridge');
+            //console.log(array1.every(num => num < 40));
+            //console.log(articles.every(article => article.author === 'butter_bridge'));
+            expect(articles.every(article => article.author === 'butter_bridge'));
+          })
       });
       describe('ERRORS', () => {
         it('returns 200 and default sort order of created_at when passed an invalid column to query by', () => {
@@ -100,9 +118,9 @@ describe('/api', () => {
             .expect(200)
             .then(({
               body: (({
-                article
+                articles
               }) => {
-                expect(article).to.be.sortedBy('created_at'), {
+                expect(articles).to.be.sortedBy('created_at'), {
                   descending: true
                 }
               })

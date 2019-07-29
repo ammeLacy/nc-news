@@ -31,7 +31,6 @@ exports.postComment = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
   //console.log('inside get Comments controller');
-  //console.log(req.query.order)
   if (req.query.order !== 'asc' && req.query.order !== 'desc' && req.query.order !== undefined) {
     res.status(400).send({
       message: 'invalid sort order'
