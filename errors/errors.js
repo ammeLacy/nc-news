@@ -5,8 +5,8 @@ exports.routeError = (req, res, next) => {
 
 exports.SQLerrors = (err, req, res, next) => {
   console.log("<<<<<<<<< SQL ERRORS");
-  console.log(err.message);
-  console.log(err.code)
+  //console.log(err.message);
+  //console.log(err.code)
   if (err.code) {
     const errCodes = {
       42703: err.message, // column does not exist

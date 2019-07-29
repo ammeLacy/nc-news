@@ -102,7 +102,7 @@ describe('/api', () => {
         });
         it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
           return request(app)
-            .get('/api/articles/15/comments?sort_by=author&sort_by=created_at&order=asc')
+            .get('/api/articles/15/comments?sort_by=author&sort_by=createdat&order=asc')
             .expect(200)
             .then(({
               body: {
@@ -112,7 +112,7 @@ describe('/api', () => {
               expect(comments).to.be.sortedBy('author');
             })
         });
-        it('returns 400 and error message if passed an invalid order', () => {
+        it('returns 400 and error message if passed an invalid order for displaying the comments', () => {
           return request(app)
             .get('/api/articles/15/comments?order=up')
             .expect(400)

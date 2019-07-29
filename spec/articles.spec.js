@@ -81,14 +81,13 @@ describe('/api', () => {
         const queries = ['author', 'title', 'article_id', 'topic', 'votes', 'comment_count'];
         const queriedFields = queries.map(query => {
           return request(app)
-            .get(`/api/articles?sort_by=${query}`)
+            .get(`/api/articles?sort_by=${query}&order=asc`)
             .expect(200)
             .then(({
               body: {
                 comments
               }
             }) => {
-              console.log(comments, '--------------------', query)
               expect(comments).to.be.sortedBy(query);
               return Promise.all(queriedFields);
             })
@@ -108,6 +107,16 @@ describe('/api', () => {
                 }
               })
             }))
+        });
+        it('returns 400 and error message if passed an invalid order for displaying the articles', () => {
+          return request(app)
+            .get('/api/articles?order=up')
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('invalid sort order')
+            })
         });
         it('returns 404 when given an incorrect path', () => {
           return request(app)
