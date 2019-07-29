@@ -29,3 +29,22 @@ exports.selectComments = ({
     }).orderBy(sort_by, order)
     .returning('*');
 }
+
+exports.updateComment = (
+  body, {
+    comment_id
+  }
+) => {
+  //console.log('inside the update comments model')
+  //console.log(comment_id)
+  //console.log(body)
+  return connection('comments')
+    .where({
+      comment_id
+    })
+    .update({
+      votes: connection.raw('votes + ' + body.inc_votes)
+    })
+    .returning('*');
+
+}

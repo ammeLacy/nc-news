@@ -1,12 +1,11 @@
 const {
   insertComment,
-  selectComments
+  selectComments,
+  updateComment
 } = require('../models/commentsModels.js');
 
 exports.postComment = (req, res, next) => {
   //console.log('inside postComments controller');
-  //console.log(req)
-  // console.log(req.body)
   if (req.body.username === undefined && req.body.body === undefined) {
     res.status(400).send({
       message: 'username and body must not be null'
@@ -50,7 +49,6 @@ exports.getComments = (req, res, next) => {
     } else {
       ordering.sort_by = 'created_at';
     }
-
     selectComments(req.params, ordering)
       .then(comments => {
         const alteredComments = comments.map(comment => {
@@ -68,4 +66,19 @@ exports.getComments = (req, res, next) => {
       }).catch(next)
 
   }
+}
+
+exports.patchComment = (req, res, next) => {
+  //console.log('inside patch comment controller');
+  //console.log(req.body)
+  updateComment(req.body, req.params)
+    .then(comment => {
+      if (comment.length === 0) {
+        res.status(404).send();
+      } else {
+        res.status(200).send({
+          comment
+        })
+      }
+    }).catch(next);
 }

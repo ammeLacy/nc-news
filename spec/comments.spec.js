@@ -313,3 +313,41 @@ describe('/api', () => {
     });
   });
 });
+
+
+describe('/api', () => {
+  beforeEach(() => connection.seed.run());
+  describe('/api/comments/:comment_id', () => {
+    describe.only('PATCH', () => {
+      it('takes an object in the form { inc_votes: newVote }, increases the vote by the positive amount given, and returns the updated object', () => {
+        return request(app)
+          .patch('/api/comments/1')
+          .send({
+            "inc_votes": 1
+          })
+          .expect(200)
+          .then(
+            ({
+              body
+            }) => {
+              expect(body.comment[0]).to.eql({
+                "comment_id": 1,
+                "author": "butter_bridge",
+                "article_id": 9,
+                "votes": 17,
+                "created_at": "2017-11-22T12:36:03.389Z",
+                "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+              })
+            }
+          );
+      });
+      describe('ERRORS', () => {
+
+      });
+      describe('INVALID METHODS', () => {
+
+      });
+    });
+
+  });
+});

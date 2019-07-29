@@ -4,7 +4,8 @@ const commentsRouter = require('express').Router({
 
 const {
   postComment,
-  getComments
+  getComments,
+  patchComment
 } = require('../controllers/commentsControllers.js');
 
 
@@ -17,6 +18,7 @@ commentsRouter
   .route('/')
   .post(postComment)
   .get(getComments)
+  .patch(patchComment)
   .all(send405Error)
 
 
