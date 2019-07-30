@@ -341,13 +341,82 @@ describe('/api', () => {
             }
           );
       });
+      it('takes an object in the form { inc_votes: newVote }, decreases the vote by the negative amount given, and returns the updated object', () => {
+        return request(app)
+          .patch('/api/comments/2')
+          .send({
+            "inc_votes": -1
+          })
+          .expect(200)
+          .then(
+            ({
+              body
+            }) => {
+              expect(body.comment[0]).to.eql({
+                'comment_id': 2,
+                'author': 'butter_bridge',
+                'article_id': 1,
+                'votes': 13,
+                'created_at': '2016-11-22T12:36:03.389Z',
+                'body': "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
+              })
+            })
+      });
+      it('returns 404 for a none existent comment_id', () => {
+        return request(app)
+          .patch('/api/comments/99999')
+          .send({
+            "inc_votes": 1
+          })
+          .expect(404);
+      });
       describe('ERRORS', () => {
+        it('returns 200 and article, and updated vote count when passed an query string in addition to the vote count', () => {
+          return request(app)
+            .patch('/api/comments/2?sortby=author')
+            .send({
+              "inc_votes": 2
+            })
+            .expect(200)
+            .then(({
+              body
+            }) => {
+              expect(body.comment[0]).to.eql({
+                'comment_id': 2,
+                'author': 'butter_bridge',
+                'article_id': 1,
+                'votes': 16,
+                'created_at': '2016-11-22T12:36:03.389Z',
+                'body': "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
+              })
+            })
+        });
+        it('returns 400 when passed an incorrect comment_id format', () => {
+          return request(app)
+            .patch('/api/comments/3a')
+            .send({
+              "inc_votes": 2
+            })
+            .expect(400)
+        });
+        it('returns 400 and error message when the number of votes is outside the range of an integer', () => {
+          return request(app)
+            .patch('/api/comments/3')
+            .send({
+              "inc_votes": 99999999999999
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('integer out of range');
+            })
+        });
+      })
+    })
+  })
+});
 
-      });
-      describe('INVALID METHODS', () => {
+describe('INVALID METHODS', () => {
 
-      });
-    });
-
-  });
 });

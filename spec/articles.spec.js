@@ -303,7 +303,7 @@ describe('/articles/:article_id ', () => {
     describe('ERRORS', () => {
       it('returns 200 and article, and updated vote count when passed an query string in addition to the vote count', () => {
         return request(app)
-          .patch('/api/articles/1')
+          .patch('/api/articles/1?sortby=article_id')
           .send({
             "inc_votes": 1
           })

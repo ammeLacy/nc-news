@@ -18,8 +18,12 @@ commentsRouter
   .route('/')
   .post(postComment)
   .get(getComments)
-  .patch(patchComment)
   .all(send405Error)
 
+
+commentsRouter
+  .route('/:comment_id')
+  .patch(patchComment)
+  .all(send405Error)
 
 module.exports = commentsRouter;
