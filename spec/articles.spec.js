@@ -183,8 +183,8 @@ describe('/api', () => {
 });
 describe('/articles/:article_id ', () => {
   beforeEach(() => connection.seed.run());
-  describe('GET', () => {
-    it.only('takes an article id, returns 200 and an article object ', () => {
+  describe.only('GET', () => {
+    it('takes an article id, returns 200 and an article object ', () => {
       return request(app)
         .get('/api/articles/1')
         .expect(200)
@@ -206,7 +206,7 @@ describe('/articles/:article_id ', () => {
             article
           }
         }) => {
-          expect(article[0]).to.include.keys(
+          expect(article).to.include.keys(
             'author',
             'title',
             'body',
@@ -223,13 +223,13 @@ describe('/articles/:article_id ', () => {
             article
           }
         }) => {
-          expect(article[0]).to.include.key('comment_count');
-          expect(parseInt(article[0].comment_count)).to.equal(13);
+          expect(article).to.include.key('comment_count');
+          expect(parseInt(article.comment_count)).to.equal(13);
         })
     });
     it('returns 404 for a requested article that does not exist', () => {
       return request(app)
-        .get('/api/articles/99999')
+        .get('/api/articles/999')
         .expect(404);
     });
     describe('ERRORS', () => {
@@ -242,7 +242,7 @@ describe('/articles/:article_id ', () => {
               article
             }
           }) => {
-            expect(article[0].article_id).to.equal(1);
+            expect(article.article_id).to.equal(1);
           })
       });
       it('returns 400 when given an invalid format for the article_id - 1a', () => {

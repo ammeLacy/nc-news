@@ -12,7 +12,7 @@ exports.sendArticle = (req, res, next) => {
   } else {
     selectArticle(parseInt(req.params.article_id))
       .then(article => {
-        if (article.length === 0) {
+        if (article === undefined) {
           res.status(404).send();
         } else {
           res.status(200).send({
