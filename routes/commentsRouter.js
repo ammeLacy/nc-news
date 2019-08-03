@@ -13,17 +13,18 @@ const {
   send405Error
 } = require('../errors/errors.js');
 
-// amend to so can do delete
+//multiple comments 
 commentsRouter
   .route('/')
   .post(postComment)
   .get(getComments)
   .all(send405Error)
 
-
+//Single comments
 commentsRouter
   .route('/:comment_id')
   .patch(patchComment)
   .all(send405Error)
+// amend to so can do delete
 
 module.exports = commentsRouter;

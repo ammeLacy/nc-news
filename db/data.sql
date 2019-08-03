@@ -1,5 +1,7 @@
-\c
-nc_news
+\c nc_news;
+SELECT
+  *
+FROM
+  USERS;
 
-SELECT *
-FROM users;
+\q

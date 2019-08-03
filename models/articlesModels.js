@@ -47,7 +47,6 @@ exports.selectArticles = ({
 exports.selectArticle = (
   article_id
 ) => {
-  //console.log("inside select article model");
   return connection.select('articles.*')
     .count({
       comment_count: 'comment_id'

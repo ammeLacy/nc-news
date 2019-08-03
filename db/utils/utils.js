@@ -41,7 +41,7 @@ exports.formatComments = (comments, articleRef) => {
         ...restOfFields
       } = comment;
       return {
-        author: comment.created_by,
+        author: created_by,
         article_id: articleRef[belongs_to],
         ...restOfFields
       };

@@ -22,7 +22,6 @@ exports.selectComments = ({
   sort_by = 'created_at',
   order = 'desc'
 }) => {
-  //console.log('inside selectComments  model')
   return connection('comments')
     .where({
       article_id
@@ -35,9 +34,6 @@ exports.updateComment = (
     comment_id
   }
 ) => {
-  //console.log('inside the update comments model')
-  //console.log(comment_id)
-  //console.log(body)
   return connection('comments')
     .where({
       comment_id

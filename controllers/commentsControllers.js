@@ -5,7 +5,6 @@ const {
 } = require('../models/commentsModels.js');
 
 exports.postComment = (req, res, next) => {
-  //console.log('inside postComments controller');
   if (req.body.username === undefined && req.body.body === undefined) {
     res.status(400).send({
       message: 'username and body must not be null'
@@ -29,7 +28,6 @@ exports.postComment = (req, res, next) => {
 }
 
 exports.getComments = (req, res, next) => {
-  //console.log('inside get Comments controller');
   if (req.query.order !== 'asc' && req.query.order !== 'desc' && req.query.order !== undefined) {
     res.status(400).send({
       message: 'invalid sort order'
@@ -69,16 +67,20 @@ exports.getComments = (req, res, next) => {
 }
 
 exports.patchComment = (req, res, next) => {
-  //console.log('inside patch comment controller');
-  //console.log(req.body)
-  updateComment(req.body, req.params)
-    .then(comment => {
-      if (comment.length === 0) {
-        res.status(404).send();
-      } else {
-        res.status(200).send({
-          comment
-        })
-      }
-    }).catch(next);
+  if (req.body.inc_votes !== undefined && !Number.isInteger(req.body.inc_votes)) {
+    res.status(400).send({
+      message: 'votes should be whole numbers'
+    })
+  } else {
+    updateComment(req.body, req.params)
+      .then(comment => {
+        if (comment.length === 0) {
+          res.status(404).send();
+        } else {
+          res.status(200).send({
+            comment
+          })
+        }
+      }).catch(next);
+  }
 }

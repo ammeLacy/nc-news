@@ -6,22 +6,25 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-describe('/api', () => {
+describe.only('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/GET', () => {
     describe('/topics', () => {
-      it('responds 200 and an array of topics', () => {
+      it.only('responds 200 and an array of topics', () => {
         return request(app)
           .get('/api/topics')
           .expect(200)
           .then(({
             body
           }) => {
-            expect(body.topics.topics[0]).to.have.all.keys(
-              'slug',
-              'description',
-            );
+            expect(body.topics).to.be.a('array')
           })
+      });
+      it('responds 200 with an array of topics that contain slug and description keys', () => {
+        return request(app)
+          .get('/api/topics')
+          .expect(200)
+
       });
       describe('ERRORS', () => {
         it('returns 200 and the default page when sent a query request', () => {

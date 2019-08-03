@@ -5,7 +5,6 @@ const {
 } = require('../models/articlesModels.js');
 
 exports.sendArticle = (req, res, next) => {
-  //console.log('inside send article controller');
   if (req.params.article_id !== undefined && !/^\d+$/.test(req.params.article_id)) {
     res.status(400).send({
       message: 'Invalid article id'
@@ -25,7 +24,6 @@ exports.sendArticle = (req, res, next) => {
 }
 
 exports.sendArticles = (req, res, next) => {
-  //console.log('inside sendArticle controller');
   if (req.query.order !== 'asc' && req.query.order !== 'desc' && req.query.order !== undefined) {
     res.status(400).send({
       message: 'invalid sort order'
@@ -66,7 +64,6 @@ exports.sendArticles = (req, res, next) => {
 
 
 exports.patchArticle = (req, res, next) => {
-  //console.log('inside patch Article controller');
   if (req.body.inc_votes !== undefined && !Number.isInteger(req.body.inc_votes)) {
     res.status(400).send({
       message: 'votes should be whole numbers'

@@ -314,11 +314,10 @@ describe('/api', () => {
   });
 });
 
-
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/api/comments/:comment_id', () => {
-    describe.only('PATCH', () => {
+    describe('PATCH', () => {
       it('takes an object in the form { inc_votes: newVote }, increases the vote by the positive amount given, and returns the updated object', () => {
         return request(app)
           .patch('/api/comments/1')
@@ -412,11 +411,71 @@ describe('/api', () => {
               expect(body.message).to.equal('integer out of range');
             })
         });
+        it('returns 400 when passed an invalid to increase the vote count', () => {
+          return request(app)
+            .patch('/api/comments/1')
+            .send({
+              "inc_votes": "a"
+            })
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.eql('votes should be whole numbers');
+            })
+        });
+        it('returns 400 when passed a floating point number to update the vote count', () => {
+          return request(app)
+            .patch('/api/comments/1')
+            .send({
+              "inc_votes": 2.5
+            })
+            .expect(400)
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.equal('votes should be whole numbers')
+            })
+        })
+        it('returns 400 when passed an incorrect column to update in request body', () => {
+          return request(app)
+            .patch('/api/comments/1')
+            .send({
+              "inc_vote": "2"
+            })
+            .then(({
+              body
+            }) => {
+              expect(body.message).to.eql('column "undefined" does not exist')
+            })
+        });
+        it('returns 404 when passed an an incorrect path', () => {
+          return request(app)
+            .patch('/api/comment/1')
+            .send({
+              "inc_votes": 1
+            })
+            .expect(404);
+        });
       })
     })
   })
 });
 
 describe('INVALID METHODS', () => {
-
+  it('status:405', () => {
+    const invalidMethods = ['put', 'delete', 'get', 'post'];
+    const methodPromises = invalidMethods.map((method) => {
+      return request(app)[method]('/api/comments/1')
+        .expect(405)
+        .then(({
+          body: {
+            msg
+          }
+        }) => {
+          expect(msg).to.equal('method not allowed');
+        });
+    });
+    // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
+    return Promise.all(methodPromises);
+  });
 });

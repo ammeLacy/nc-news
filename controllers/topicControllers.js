@@ -4,12 +4,8 @@ const {
 
 
 exports.sendTopics = (req, res, next) => {
-  //console.log(' ** inside topicController');
   selectTopics()
-    .then(topicsArray => {
-      const topics = {
-        topics: topicsArray
-      };
+    .then(topics => {
       res.status(200).send({
         topics
       })
