@@ -287,7 +287,7 @@ describe('/articles/:article_id ', () => {
     });
   });
   describe('PATCH', () => {
-    it('takes an object in the form { inc_votes: newVote }, increases the vote by the positive amount given, and returns the updated object', () => {
+    it('takes an object in the form { inc_votes: newVote }, increases the vote by the positive amount given, returns 200 the updated object', () => {
       return request(app)
         .patch('/api/articles/1')
         .send({
@@ -295,9 +295,12 @@ describe('/articles/:article_id ', () => {
         })
         .expect(200)
         .then(({
-          body
+          body: {
+            article
+          }
         }) => {
-          expect(body.article[0]).to.eql({
+          expect(article).to.be.a("object");
+          expect(article).to.eql({
             "article_id": 1,
             "author": "butter_bridge",
             "title": "Living in the shadow of a great man",
@@ -315,9 +318,13 @@ describe('/articles/:article_id ', () => {
           "inc_votes": -1
         })
         .then(({
-          body
+          body: {
+            article: {
+              votes
+            }
+          }
         }) => {
-          expect(body.article[0].votes).to.equal(99);
+          expect(votes).to.equal(99);
         })
     });
     it('returns 404 for a none existent article id', () => {
@@ -337,9 +344,11 @@ describe('/articles/:article_id ', () => {
           })
           .expect(200)
           .then(({
-            body
+            body: {
+              article
+            }
           }) => {
-            expect(body.article[0]).to.eql({
+            expect(article).to.eql({
               "article_id": 1,
               "author": "butter_bridge",
               "title": "Living in the shadow of a great man",

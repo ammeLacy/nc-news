@@ -75,7 +75,7 @@ exports.patchArticle = (req, res, next) => {
           res.status(404).send();
         } else {
           res.status(200).send({
-            article
+            article: article[0]
           })
         }
       }).catch(next);
