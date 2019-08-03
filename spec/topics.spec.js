@@ -6,24 +6,33 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-describe.only('/api', () => {
+describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/GET', () => {
     describe('/topics', () => {
-      it.only('responds 200 and an array of topics', () => {
+      it('responds 200 and an array of topics', () => {
         return request(app)
           .get('/api/topics')
           .expect(200)
           .then(({
-            body
+            body: {
+              topics
+            }
           }) => {
-            expect(body.topics).to.be.a('array')
+            expect(topics).to.be.a('array')
           })
       });
       it('responds 200 with an array of topics that contain slug and description keys', () => {
         return request(app)
           .get('/api/topics')
           .expect(200)
+          .then(({
+            body: {
+              topics
+            }
+          }) => {
+            expect(topics[0]).to.have.keys('slug', 'description');
+          })
 
       });
       describe('ERRORS', () => {
@@ -32,9 +41,11 @@ describe.only('/api', () => {
             .get('/api/topics?greatTopic=true')
             .expect(200)
             .then(({
-              body
+              body: {
+                topics
+              }
             }) => {
-              expect(body.topics.topics[0].slug).to.eql('mitch');
+              expect(topics[0].slug).to.eql('mitch');
             })
         });
         it('returns 404 when given an incorrect path', () => {

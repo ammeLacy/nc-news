@@ -123,7 +123,8 @@ module.exports = [{
     created_by: 'butter_bridge',
     votes: 16,
     created_at: 975242163389,
-
+  },
+  {
     body: 'Suspendisse ac odio nec ligula eleifend bibendum at at magna.',
     belongs_to: 'more chocolate',
     created_by: 'butter_bridge',

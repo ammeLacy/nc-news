@@ -201,7 +201,7 @@ describe('/articles/:article_id ', () => {
             'votes')
         })
     });
-    it('returns a comment count key that returns the number of comments for the given article', () => {
+    it.only('returns a comment count key that returns the number of comments for the given article', () => {
       return request(app)
         .get('/api/articles/1')
         .then(({
@@ -210,7 +210,7 @@ describe('/articles/:article_id ', () => {
           }
         }) => {
           expect(article[0]).to.include.key('comment_count');
-          expect(parseInt(article[0].comment_count)).to.equal(12);
+          expect(parseInt(article[0].comment_count)).to.equal(13);
         })
     });
     it('returns 404 for a requested article that does not exist', () => {
