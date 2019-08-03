@@ -183,7 +183,7 @@ describe('/api', () => {
 });
 describe('/articles/:article_id ', () => {
   beforeEach(() => connection.seed.run());
-  describe.only('GET', () => {
+  describe('GET', () => {
     it('takes an article id, returns 200 and an article object ', () => {
       return request(app)
         .get('/api/articles/1')
@@ -224,7 +224,21 @@ describe('/articles/:article_id ', () => {
           }
         }) => {
           expect(article).to.include.key('comment_count');
-          expect(parseInt(article.comment_count)).to.equal(13);
+          expect(article.comment_count).to.equal(13);
+        })
+    });
+    it('returns 200 and vote column is set to 0 as a default', () => {
+      return request(app)
+        .get('/api/articles/2')
+        .then(({
+          body: {
+            article: {
+              votes
+            }
+          }
+        }) => {
+          console.log(votes)
+          expect(votes).to.equal(0);
         })
     });
     it('returns 404 for a requested article that does not exist', () => {
@@ -303,7 +317,7 @@ describe('/articles/:article_id ', () => {
         .then(({
           body
         }) => {
-          expect(body.article[0].votes).to.equal(100);
+          expect(body.article[0].votes).to.equal(99);
         })
     });
     it('returns 404 for a none existent article id', () => {

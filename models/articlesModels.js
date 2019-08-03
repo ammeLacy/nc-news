@@ -1,21 +1,7 @@
 const connection = require('../db/connection.js');
 
 
-// ``
-// `js
-// // ./models/films.js
-// exports.getFilms = ({ limit, film_id }) => {
-//   return connection
-//     .select('*')
-//     .from('films')
-//     .limit(limit || 10)
-//     .modify((query) => {
-//       if (film_id) query.where({ film_id }).first();
-//     });
-// };
-// `
 
-//TO DO refactor to handle  filters
 exports.selectArticles = ({
   sort_by = 'created_at',
   order = 'desc',
