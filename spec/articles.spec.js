@@ -182,7 +182,21 @@ describe('/api', () => {
   });
 });
 describe('/articles/:article_id ', () => {
+  beforeEach(() => connection.seed.run());
   describe('GET', () => {
+    it.only('takes an article id, returns 200 and an article object ', () => {
+      return request(app)
+        .get('/api/articles/1')
+        .expect(200)
+        .then(({
+          body: {
+            article
+          }
+        }) => {
+          expect(article).to.be.a('object');
+        })
+
+    });
     it('takes an article id, returns 200 and an article object including keys author(username), article_id, body, topic, created_at, votes', () => {
       return request(app)
         .get('/api/articles/1')
@@ -201,7 +215,7 @@ describe('/articles/:article_id ', () => {
             'votes')
         })
     });
-    it.only('returns a comment count key that returns the number of comments for the given article', () => {
+    it('returns a comment count key that returns the number of comments for the given article', () => {
       return request(app)
         .get('/api/articles/1')
         .then(({
