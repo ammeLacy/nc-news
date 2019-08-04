@@ -5,8 +5,9 @@ exports.routeError = (req, res, next) => {
 
 exports.SQLerrors = (err, req, res, next) => {
   //console.log("<<<<<<<<< SQL ERRORS");
-  console.log(err.message);
-  console.log(err.code)
+  //console.log(err.message);
+  //console.log(err.code)
+  //console.log(err)
   if (err.code) {
     const errCodes = {
       42703: err.message, // column does not exist
@@ -24,6 +25,8 @@ exports.SQLerrors = (err, req, res, next) => {
       message = errCodes[err.code].split(' * ')[1].split('"')[1] + " cannot be null";
     } else if (err.code === '22001') {
       message = errCodes[err.code].split(' - ')[1].split(' varying')[0];
+    } else if (err.code === 22003) {
+      message = errCodes[err.code].split('value')[0]
     } else {
       message = errCodes[err.code].split(' - ')[1];
     }
@@ -39,8 +42,19 @@ exports.send405Error = (req, res, next) => {
   });
 };
 
+exports.customErrors = (err, req, res, next) => {
+  console.log('customErrors')
+  if (err.status) {
+    res.status(err.status).send({
+      message: err.msg
+    });
+  } else {
+    next(err)
+  }
+}
+
 exports.serverError = (err, req, res, next) => {
-  //console.log("<<<<<<< SERVER ERROR");
+  console.log("<<<<<<< SERVER ERROR");
   console.log(err)
   res.status(500).send({
     msg: 'internal server error'

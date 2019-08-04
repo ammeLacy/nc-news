@@ -1,4 +1,7 @@
 const connection = require('../db/connection.js');
+const {
+  selectArticle
+} = require('./articlesModels.js');
 
 exports.insertComment = (body, {
   article_id
@@ -34,13 +37,21 @@ exports.updateComment = (
     comment_id
   }
 ) => {
-  return connection('comments')
-    .where({
-      comment_id
+  const {
+    inc_votes
+  } = body;
+  if (inc_votes !== undefined)
+    return connection('comments')
+      .where({
+        comment_id
+      })
+      .increment('votes', inc_votes)
+      .returning('*');
+  else {
+    return Promise.reject({
+      status: 400,
+      msg: 'inc_votes missing',
     })
-    .update({
-      votes: connection.raw('votes + ' + body.inc_votes)
-    })
-    .returning('*');
+  }
 
 }

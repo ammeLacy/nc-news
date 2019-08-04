@@ -4,6 +4,7 @@ const apiRouter = require('./routes/apiRouter.js')
 const {
   routeError,
   SQLerrors,
+  customErrors,
   serverError
 } = require('./errors/errors.js');
 
@@ -14,7 +15,8 @@ app.use(express.json());
 app.use('/api', apiRouter);
 
 //Error handling
-app.use(SQLerrors)
+app.use(SQLerrors);
+app.use(customErrors);
 app.use(serverError);
 app.all('/*', routeError);
 

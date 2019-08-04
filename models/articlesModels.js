@@ -46,16 +46,23 @@ exports.selectArticle = (
 }
 
 
-
 exports.updateArticle = (body, {
   article_id
 }) => {
-  return connection('articles')
-    .where({
-      article_id
-    })
-    .update({
-      votes: connection.raw('votes + ' + body.inc_votes)
-    })
-    .returning('*');
+  const {
+    inc_votes
+  } = body;
+  if (inc_votes !== undefined)
+    return connection('articles')
+      .where({
+        article_id
+      })
+      .increment('votes', inc_votes)
+      .returning('*');
+  else {
+    return Promise.reject({
+      status: 400,
+      msg: 'inc_votes missing',
+    });
+  }
 }

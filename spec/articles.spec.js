@@ -67,10 +67,10 @@ describe('/api', () => {
             .expect(200)
             .then(({
               body: {
-                article
+                articles
               }
             }) => {
-              expect(article).to.be.sortedBy(query, {
+              expect(articles).to.be.sortedBy(query, {
                 descending: true
               });
               return Promise.all(queriedFields);
@@ -237,7 +237,6 @@ describe('/articles/:article_id ', () => {
             }
           }
         }) => {
-          console.log(votes)
           expect(votes).to.equal(0);
         })
     });
@@ -329,7 +328,7 @@ describe('/articles/:article_id ', () => {
     });
     it('returns 404 for a none existent article id', () => {
       return request(app)
-        .patch('/api/articles/9999')
+        .patch('/api/articles/1000')
         .send({
           "inc_votes": 1
         })
@@ -371,13 +370,16 @@ describe('/articles/:article_id ', () => {
         return request(app)
           .patch('/api/articles/1')
           .send({
-            "inc_votes": 99999999999999
+            "inc_votes": 9223372036854775807
           })
           .expect(400)
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.equal('integer out of range');
+
+            expect(message).to.equal('value "9223372036854776000" is out of range for type integer');
           })
       });
       it('returns 400 when passed an invalid value is sent to increase the vote count', () => {
@@ -388,9 +390,11 @@ describe('/articles/:article_id ', () => {
           })
           .expect(400)
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.eql('votes should be whole numbers');
+            expect(message).to.eql('votes should be whole numbers');
           })
       });
       it('returns 400 when passed an incorrect column to update in the request body', () => {
@@ -401,9 +405,11 @@ describe('/articles/:article_id ', () => {
           })
           .expect(400)
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.equal('column "undefined" does not exist');
+            expect(message).to.equal('inc_votes missing');
           })
       });
       it('returns 400 when passed a floating point number to update the vote count', () => {
@@ -413,12 +419,25 @@ describe('/articles/:article_id ', () => {
             "inc_votes": 1.5
           })
           .expect(400)
-
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.equal('votes should be whole numbers')
+            expect(message).to.equal('votes should be whole numbers')
           })
+      });
+      it('returns 400 when passed a request with no body', () => {
+        return request(app)
+          .patch('/api/articles/1')
+          .expect(400)
+          .then(({
+            body: (({
+              message
+            }) => {
+              expect(message).to.equal('column "undefined" does not exist')
+            })
+          }))
       });
       it('returns 404 when passed an incorrect path', () => {
         return request(app)

@@ -85,6 +85,13 @@ describe('/api', () => {
             })
         })
       });
+      it('returns 404 when given a valid format article id for an article that does not exist', () => {
+        return request(app)
+          .get('/api/articles/1000/comments')
+          .expect(404);
+
+
+      });
       describe('ERRORS', () => {
         it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
           return request(app) //?sort_by=body
@@ -408,7 +415,7 @@ describe('/api', () => {
             .then(({
               body
             }) => {
-              expect(body.message).to.equal('integer out of range');
+              expect(body.message).to.equal('value "99999999999999" is out of range for type integer');
             })
         });
         it('returns 400 when passed an invalid to increase the vote count', () => {
@@ -417,6 +424,7 @@ describe('/api', () => {
             .send({
               "inc_votes": "a"
             })
+            .expect(400)
             .then(({
               body
             }) => {
@@ -445,7 +453,7 @@ describe('/api', () => {
             .then(({
               body
             }) => {
-              expect(body.message).to.eql('column "undefined" does not exist')
+              expect(body.message).to.eql('inc_votes missing')
             })
         });
         it('returns 404 when passed an an incorrect path', () => {

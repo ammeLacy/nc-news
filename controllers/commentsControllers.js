@@ -3,6 +3,9 @@ const {
   selectComments,
   updateComment
 } = require('../models/commentsModels.js');
+const {
+  selectArticle
+} = require('../models/articlesModels.js');
 
 exports.postComment = (req, res, next) => {
   if (req.body.username === undefined && req.body.body === undefined) {
@@ -49,18 +52,33 @@ exports.getComments = (req, res, next) => {
     }
     selectComments(req.params, ordering)
       .then(comments => {
-        const alteredComments = comments.map(comment => {
-          const {
-            article_id,
-            ...otherFields
-          } = comment;
-          return {
-            ...otherFields
-          };
-        })
-        res.status(200).send({
-          comments: alteredComments
-        })
+        if (comments.length === 0) {
+          selectArticle(parseInt(req.params.article_id))
+            .then(
+              article => {
+                if (article === undefined) {
+                  res.status(404).send();
+                } else {
+                  res.status(200).send({
+                    comments: []
+                  })
+                }
+              }
+            )
+        } else {
+          const alteredComments = comments.map(comment => {
+            const {
+              article_id,
+              ...otherFields
+            } = comment;
+            return {
+              ...otherFields
+            };
+          })
+          res.status(200).send({
+            comments: alteredComments
+          })
+        }
       }).catch(next)
 
   }
