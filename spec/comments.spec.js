@@ -85,6 +85,7 @@ describe('/api', () => {
             })
         })
       });
+
       it('returns 404 when given a valid format article id for an article that does not exist', () => {
         return request(app)
           .get('/api/articles/1000/comments')
@@ -147,7 +148,7 @@ describe('/api', () => {
       });
     });
     describe('POST', () => {
-      it('accepts an object with the following properties:username body and returns the posted comment', () => {
+      it('accepts an object with the following properties:username body and returns 201 and the posted comment', () => {
         return request(app)
           .post('/api/articles/1/comments')
           .send({
@@ -156,17 +157,20 @@ describe('/api', () => {
           })
           .expect(201)
           .then(({
-            body
+            body: {
+              comment
+            }
           }) => {
-            expect(body.comment[0]).to.include.keys(
+            expect(comment).to.include.keys(
               'comment_id',
               'author',
               'article_id',
               'votes',
               'created_at'
             )
-            expect(body.comment[0].author).to.equal('butter_bridge');
-            expect(body.comment[0].body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+            expect(comment).to.be.a("object");
+            expect(comment.author).to.equal('butter_bridge');
+            expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
           })
       });
       it('able to accept a long comment', () => {
@@ -191,24 +195,21 @@ describe('/api', () => {
             })
             .expect(201)
             .then(({
-              body
+              body: {
+                comment
+              }
             }) => {
-              expect(body.comment[0].body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
+              expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
             })
         });
-        it('returns 400 if a none existent article-id is sent', () => {
+        it('returns 404 if a none existent article-id is sent', () => {
           return request(app)
             .post('/api/articles/99999/comments')
             .send({
               "username": "butter_bridge",
               "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             })
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.eql('article does not exist');
-            })
+            .expect(404);
         });
         it('returns 400 if an invalid article-id is sent', () => {
           return request(app)
@@ -334,9 +335,12 @@ describe('/api', () => {
           .expect(200)
           .then(
             ({
-              body
+              body: {
+                comment
+              }
             }) => {
-              expect(body.comment[0]).to.eql({
+              expect(comment).to.be.a("object");
+              expect(comment).to.eql({
                 "comment_id": 1,
                 "author": "butter_bridge",
                 "article_id": 9,
@@ -356,9 +360,11 @@ describe('/api', () => {
           .expect(200)
           .then(
             ({
-              body
+              body: {
+                comment
+              }
             }) => {
-              expect(body.comment[0]).to.eql({
+              expect(comment).to.eql({
                 'comment_id': 2,
                 'author': 'butter_bridge',
                 'article_id': 1,
@@ -385,9 +391,11 @@ describe('/api', () => {
             })
             .expect(200)
             .then(({
-              body
+              body: {
+                comment
+              }
             }) => {
-              expect(body.comment[0]).to.eql({
+              expect(comment).to.eql({
                 'comment_id': 2,
                 'author': 'butter_bridge',
                 'article_id': 1,

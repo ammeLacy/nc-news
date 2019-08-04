@@ -3,6 +3,7 @@ const {
   selectComments,
   updateComment
 } = require('../models/commentsModels.js');
+
 const {
   selectArticle
 } = require('../models/articlesModels.js');
@@ -21,14 +22,20 @@ exports.postComment = (req, res, next) => {
       message: 'body must not be null'
     })
   } else {
-    insertComment(req.body, req.params)
-      .then(comment => {
-        res.status(201).send({
-          comment
-        })
-      }).catch(next);
+    selectArticle(parseInt(parseInt(req.params.article_id)))
+      .then(article => {
+        if (article === undefined) {
+          res.status(404).send()
+        } else insertComment(req.body, req.params)
+          .then(comment => {
+            res.status(201).send({
+              comment: comment[0]
+            })
+          }).catch(next);
+      })
   }
 }
+
 
 exports.getComments = (req, res, next) => {
   if (req.query.order !== 'asc' && req.query.order !== 'desc' && req.query.order !== undefined) {
@@ -96,7 +103,7 @@ exports.patchComment = (req, res, next) => {
           res.status(404).send();
         } else {
           res.status(200).send({
-            comment
+            comment: comment[0]
           })
         }
       }).catch(next);
