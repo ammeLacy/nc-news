@@ -12,7 +12,7 @@ describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles', () => {
     describe('GET', () => {
-      it('responds  200 and an array of article objects, each of which has an author, title, article_id, topic, created_at, votes and comment_count keys, ', () => {
+      it('returns  200 and an array of article objects, each of which has an author, title, article_id, topic, created_at, votes and comment_count keys, ', () => {
         return request(app)
           .get('/api/articles')
           .expect(200)
@@ -21,6 +21,7 @@ describe('/api', () => {
               articles
             }
           }) => {
+            expect(articles).to.be.a("array");
             expect(articles[articles.length - 1]).to.include.keys(
               'author',
               'title',
@@ -34,9 +35,10 @@ describe('/api', () => {
               'votes');
           })
       });
-      it('returns a comment count key that returns the number of comments for each article', () => {
+      it('returns 200 and comment count key that returns the number of comments for each article', () => {
         return request(app)
           .get('/api/articles')
+          .expect(200)
           .then(({
             body: {
               articles
@@ -46,9 +48,10 @@ describe('/api', () => {
             expect(parseInt(articles[14].comment_count)).to.equal(0);
           })
       });
-      it('returns articles sorted by date (created_at) as the default sort order and descending as the default order ', () => {
+      it('returns 200 and articles sorted by DEFAULT SORT ORDER CREATED_AT DESCENDING as the DEFAULT ORDER ', () => {
         return request(app)
           .get('/api/articles')
+          .expect(200)
           .then(({
             body: (({
               articles
@@ -59,7 +62,7 @@ describe('/api', () => {
             })
           }))
       });
-      it('returns articles sorted by field specified in the query string descending', () => {
+      it('returns 200 and articles sorted by field specified in the query string and DEFAULT ORDER', () => {
         const queries = ['author', 'title', 'article_id', 'topic', 'votes', 'comment_count'];
         const queriedFields = queries.map(query => {
           return request(app)
@@ -77,7 +80,7 @@ describe('/api', () => {
             })
         })
       });
-      it('returns articles sorted by field specified in the query string ascending', () => {
+      it('returns 200 articles sorted by field specified in the query string ASCENDING', () => {
         const queries = ['author', 'title', 'article_id', 'topic', 'votes', 'comment_count'];
         const queriedFields = queries.map(query => {
           return request(app)
@@ -93,7 +96,7 @@ describe('/api', () => {
             })
         })
       })
-      it('returns 200 and all the articles for a given author if the author exists', () => {
+      it('returns 200 and all the articles for a given author if the author exists with the DEFAULT SORT_BY and ORDER_BY', () => {
         return request(app)
           .get('/api/articles?author=butter_bridge')
           .expect(200)
@@ -104,9 +107,26 @@ describe('/api', () => {
           }) => {
             expect(articles.every(article => article.author === 'butter_bridge')).to.equal(true);
             expect(!articles.includes('icellusedkars')).to.equal(true);
+            expect(articles).to.be.sortedBy('created_at', {
+              descending: true
+            });
           })
       });
-      it('returns 200 and all articles for a given topic if the topic exists', () => {
+      it('returns 200 and all the articles for a given author if the author exists for a given topic if the topic exists, ASCENDING', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge&topic=mitch&order=asc')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.every(article => article.author === 'butter_bridge')).to.equal(true);
+            expect(articles.every(article => article.topic === 'mitch')).to.equal(true);
+            expect(articles).to.be.sortedBy('created_at');
+          })
+      });
+      it('returns 200 and all articles for a given topic if the topic exists with the DEFAULT SORT_BY and ORDER_BY', () => {
         return request(app)
           .get('/api/articles?topic=mitch')
           .expect(200)
@@ -117,6 +137,9 @@ describe('/api', () => {
           }) => {
             expect(articles.every(article => article.topic === 'mitch')).to.equal(true);
             expect(!articles.includes('cats')).to.equal(true);
+            expect(articles).to.be.sortedBy('created_at', {
+              descending: true
+            });
           })
       });
       it('returns 404 when a non existant username is given', () => {
@@ -130,7 +153,7 @@ describe('/api', () => {
           .expect(404);
       });
       describe('ERRORS', () => {
-        it('returns 200 and default sort order of created_at when passed an invalid column to query by', () => {
+        it('returns 200 and DEFFAULT SORT ORDER of CREATED_AT when passed an invalid column to query by', () => {
           return request(app)
             .get('/api/articles?sort_by=body')
             .expect(200)
