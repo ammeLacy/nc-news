@@ -327,7 +327,7 @@ describe('/api', () => {
   });
 });
 
-describe.only('/api', () => {
+describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/api/comments/:comment_id', () => {
     describe('PATCH', () => {
@@ -417,6 +417,13 @@ describe.only('/api', () => {
               "inc_votes": 2
             })
             .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('Invalid comment_id')
+            })
         });
         it('returns 400 and error message when the number of votes is outside the range of an integer', () => {
           return request(app)

@@ -1,5 +1,8 @@
 const connection = require('../db/connection.js');
-
+const {
+  isValidArticleId,
+  isValidVoteIncrement
+} = require('./modelUtils.js');
 
 
 exports.selectArticles = ({
@@ -69,7 +72,7 @@ exports.updateArticle = (body, {
   if (!isValidArticleId(article_id)) {
     return Promise.reject({
       status: 400,
-      msg: 'Invalid article id'
+      msg: 'Invalid article_id'
     })
   } else if (inc_votes === undefined) {
     return Promise.reject({
@@ -89,12 +92,4 @@ exports.updateArticle = (body, {
       .increment('votes', inc_votes)
       .returning('*');
   }
-}
-
-exports.isValidVoteIncrement = (inc_votes) => {
-  return /^-?\d+$/.test(inc_votes);
-}
-
-exports.isValidArticleId = (article_id) => {
-  return /^\d+$/.test(article_id);
 }

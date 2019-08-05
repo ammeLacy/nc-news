@@ -393,7 +393,14 @@ describe('/articles/:article_id ', () => {
           .send({
             "inc_votes": 1
           })
-          .expect(400);
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('Invalid article_id')
+          })
       });
       it('returns 400 and error message when given a number of votes outside of the range of integer', () => {
         return request(app)

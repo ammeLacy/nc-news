@@ -63,11 +63,7 @@ exports.getComments = (req, res, next) => {
 }
 
 exports.patchComment = (req, res, next) => {
-  // if (req.body.inc_votes !== undefined && !Number.isInteger(req.body.inc_votes)) {
-  //   res.status(400).send({
-  //     message: 'votes should be whole numbers'
-  //   })
-  // } else {
+
   updateComment(req.body, req.params)
     .then(comment => {
       if (comment.length === 0) {
@@ -79,4 +75,3 @@ exports.patchComment = (req, res, next) => {
       }
     }).catch(err => next(err));
 }
-// }

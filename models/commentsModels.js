@@ -2,7 +2,7 @@ const connection = require('../db/connection.js');
 const {
   isValidArticleId,
   isValidVoteIncrement
-} = require('./articlesModels.js');
+} = require('./modelUtils.js');
 
 exports.insertComment = (body, {
   article_id
@@ -70,7 +70,7 @@ exports.updateComment = (
   if (!isValidArticleId(comment_id)) {
     return Promise.reject({
       status: 400,
-      msg: 'Invalid article id'
+      msg: 'Invalid comment_id'
     })
   } else if (inc_votes === undefined) {
     return Promise.reject({
