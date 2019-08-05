@@ -31,7 +31,7 @@ exports.postComment = (req, res, next) => {
             res.status(201).send({
               comment: comment[0]
             })
-          }).catch(next);
+          }).catch(err => next(err));
       })
   }
 }
@@ -86,7 +86,7 @@ exports.getComments = (req, res, next) => {
             comments: alteredComments
           })
         }
-      }).catch(next)
+      }).catch(err => next(err))
 
   }
 }
@@ -106,6 +106,6 @@ exports.patchComment = (req, res, next) => {
             comment: comment[0]
           })
         }
-      }).catch(next);
+      }).catch(err => next(err));
   }
 }

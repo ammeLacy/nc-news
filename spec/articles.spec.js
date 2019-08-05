@@ -144,15 +144,19 @@ describe('/api', () => {
               })
             }))
         });
-        it('returns 400 and error message if passed an invalid order for displaying the articles', () => {
+        it('returns 200 and error message if passed an invalid order for displaying the articles and defaults to descending', () => {
           return request(app)
             .get('/api/articles?order=up')
-            .expect(400)
+            .expect(200)
             .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('invalid sort order')
-            })
+              body: (({
+                articles
+              }) => {
+                expect(articles).to.be.sortedBy('created_at'), {
+                  descending: true
+                }
+              })
+            }))
         });
         it('returns 404 when given an incorrect path', () => {
           return request(app)

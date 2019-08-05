@@ -458,6 +458,7 @@ describe('/api', () => {
             .send({
               "inc_vote": "2"
             })
+            .expect(400)
             .then(({
               body
             }) => {
