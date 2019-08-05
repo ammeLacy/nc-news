@@ -9,32 +9,19 @@ const {
 } = require('../models/articlesModels.js');
 
 exports.postComment = (req, res, next) => {
-  if (req.body.username === undefined && req.body.body === undefined) {
-    res.status(400).send({
-      message: 'username and body must not be null'
+  selectArticle(parseInt(parseInt(req.params.article_id)))
+    .then(article => {
+      if (article === undefined) {
+        res.status(404).send()
+      } else insertComment(req.body, req.params)
+        .then(comment => {
+          res.status(201).send({
+            comment: comment[0]
+          })
+        }).catch(err => next(err));
     })
-  } else if (req.body.username === undefined) {
-    res.status(400).send({
-      message: 'username must not be null'
-    });
-  } else if (req.body.body === undefined) {
-    res.status(400).send({
-      message: 'body must not be null'
-    })
-  } else {
-    selectArticle(parseInt(parseInt(req.params.article_id)))
-      .then(article => {
-        if (article === undefined) {
-          res.status(404).send()
-        } else insertComment(req.body, req.params)
-          .then(comment => {
-            res.status(201).send({
-              comment: comment[0]
-            })
-          }).catch(err => next(err));
-      })
-  }
 }
+
 
 
 exports.getComments = (req, res, next) => {

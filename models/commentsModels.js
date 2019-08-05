@@ -10,15 +10,32 @@ exports.insertComment = (body, {
     username,
     ...fields
   } = body;
-  return connection('comments')
-    .insert({
-      article_id,
-      author: username,
-      ...fields
+  if (body.username === undefined && body.body === undefined) {
+    return Promise.reject({
+      status: 400,
+      msg: 'username and body must not be null'
+    });
+  }
+  if (username === undefined) {
+    return Promise.reject({
+      status: 400,
+      msg: 'username must not be null'
     })
-    .returning('*');
+  } else if (body.body === undefined) {
+    return Promise.reject({
+      status: 400,
+      msg: 'body must not be null'
+    })
+  } else {
+    return connection('comments')
+      .insert({
+        article_id,
+        author: username,
+        ...fields
+      })
+      .returning('*');
+  }
 }
-
 exports.selectComments = ({
   article_id
 }, {

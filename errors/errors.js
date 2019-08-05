@@ -4,9 +4,9 @@ exports.routeError = (req, res, next) => {
 }
 
 exports.SQLerrors = (err, req, res, next) => {
-  // console.log("<<<<<<<<< SQL ERRORS");
-  // console.log(err.message);
-  // console.log(err.code)
+  console.log("<<<<<<<<< SQL ERRORS");
+  console.log(err.message);
+  console.log(err.code)
   // console.log(err)
   if (err.code) {
     const errCodes = {
