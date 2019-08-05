@@ -48,7 +48,7 @@ describe('/api', () => {
             expect(parseInt(articles[14].comment_count)).to.equal(0);
           })
       });
-      it('returns 200 and articles sorted by DEFAULT SORT ORDER CREATED_AT DESCENDING as the DEFAULT ORDER ', () => {
+      it('returns 200 and articles sorted by DEFAULT SORT ORDER CREATED_AT and DESCENDING as the DEFAULT ORDER ', () => {
         return request(app)
           .get('/api/articles')
           .expect(200)

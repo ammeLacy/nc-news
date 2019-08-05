@@ -11,7 +11,7 @@ const app = require('../app.js');
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
-    describe.only('GET', () => {
+    describe('GET', () => {
       it('returns 200 and an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
         return request(app)
           .get('/api/articles/1/comments')
@@ -21,6 +21,7 @@ describe('/api', () => {
               comments
             }
           }) => {
+            expect(comments).to.be.a("array");
             expect(comments[0]).to.have.all.keys(
               'comment_id', 'votes', 'created_at', 'author', 'body');
           })
@@ -37,10 +38,10 @@ describe('/api', () => {
             expect(comments.length).to.equal(0);
           })
       });
-      it('returns comments sorted by created_at as a default sort order and descending as the default order', () => {
+      it('returns 200 and comments sorted by DEFAULT SORT ORDER CREATED_AT and DESCENDING as the DEFAULT order', () => {
         return request(app)
           .get('/api/articles/15/comments')
-          .send()
+          .expect(200)
           .then(({
             body: {
               comments
@@ -51,7 +52,7 @@ describe('/api', () => {
             });
           })
       });
-      it('returns comments sorted by field specified in the query string descending', () => {
+      it('returns 200 comments sorted by field specified in the query string and DEFAULT ORDER', () => {
         const queries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
         const queriedFields = queries.map(query => {
           return request(app)
@@ -69,7 +70,7 @@ describe('/api', () => {
             })
         })
       });
-      it('returns comments sorted by field specified in the query string ascending', () => {
+      it('returns 200 comments sorted by field specified in the query string ASCENDING', () => {
         const queries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
         const queriedFields = queries.map(query => {
           return request(app)
@@ -81,7 +82,7 @@ describe('/api', () => {
               }
             }) => {
               expect(comments).to.be.sortedBy(query);
-              return Promise.all(queriedFields);
+              return Promise.all(queriedFields)
             })
         })
       });
@@ -326,7 +327,7 @@ describe('/api', () => {
   });
 });
 
-describe('/api', () => {
+describe.only('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/api/comments/:comment_id', () => {
     describe('PATCH', () => {
@@ -430,7 +431,7 @@ describe('/api', () => {
               expect(body.message).to.equal('value "99999999999999" is out of range for type integer');
             })
         });
-        it('returns 400 when passed an invalid to increase the vote count', () => {
+        it('returns 400 when passed an invalid value to increase the vote count', () => {
           return request(app)
             .patch('/api/comments/1')
             .send({

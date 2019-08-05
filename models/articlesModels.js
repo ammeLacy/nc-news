@@ -91,10 +91,10 @@ exports.updateArticle = (body, {
   }
 }
 
-function isValidVoteIncrement(inc_votes) {
+exports.isValidVoteIncrement = (inc_votes) => {
   return /^-?\d+$/.test(inc_votes);
 }
 
-function isValidArticleId(article_id) {
+exports.isValidArticleId = (article_id) => {
   return /^\d+$/.test(article_id);
 }

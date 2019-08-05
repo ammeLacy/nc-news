@@ -1,6 +1,7 @@
 const connection = require('../db/connection.js');
 const {
-  selectArticle
+  isValidArticleId,
+  isValidVoteIncrement
 } = require('./articlesModels.js');
 
 exports.insertComment = (body, {
@@ -36,6 +37,8 @@ exports.insertComment = (body, {
       .returning('*');
   }
 }
+
+
 exports.selectComments = ({
   article_id
 }, {
@@ -64,18 +67,27 @@ exports.updateComment = (
   const {
     inc_votes
   } = body;
-  if (inc_votes !== undefined)
+  if (!isValidArticleId(comment_id)) {
+    return Promise.reject({
+      status: 400,
+      msg: 'Invalid article id'
+    })
+  } else if (inc_votes === undefined) {
+    return Promise.reject({
+      status: 400,
+      msg: 'inc_votes missing'
+    })
+  } else if (!isValidVoteIncrement(inc_votes)) {
+    return Promise.reject({
+      status: 400,
+      msg: 'votes should be whole numbers'
+    })
+  } else {
     return connection('comments')
       .where({
         comment_id
       })
       .increment('votes', inc_votes)
       .returning('*');
-  else {
-    return Promise.reject({
-      status: 400,
-      msg: 'inc_votes missing',
-    })
   }
-
 }

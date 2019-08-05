@@ -26,12 +26,9 @@ exports.getComments = (req, res, next) => {
   let {
     order
   } = req.query;
-
-
   let ordering = {
     order
   };
-
   selectComments(req.params, ordering)
     .then(comments => {
       if (comments.length === 0) {
@@ -64,23 +61,22 @@ exports.getComments = (req, res, next) => {
     }).catch(err => next(err))
 
 }
-//}
 
 exports.patchComment = (req, res, next) => {
-  if (req.body.inc_votes !== undefined && !Number.isInteger(req.body.inc_votes)) {
-    res.status(400).send({
-      message: 'votes should be whole numbers'
-    })
-  } else {
-    updateComment(req.body, req.params)
-      .then(comment => {
-        if (comment.length === 0) {
-          res.status(404).send();
-        } else {
-          res.status(200).send({
-            comment: comment[0]
-          })
-        }
-      }).catch(err => next(err));
-  }
+  // if (req.body.inc_votes !== undefined && !Number.isInteger(req.body.inc_votes)) {
+  //   res.status(400).send({
+  //     message: 'votes should be whole numbers'
+  //   })
+  // } else {
+  updateComment(req.body, req.params)
+    .then(comment => {
+      if (comment.length === 0) {
+        res.status(404).send();
+      } else {
+        res.status(200).send({
+          comment: comment[0]
+        })
+      }
+    }).catch(err => next(err));
 }
+// }
