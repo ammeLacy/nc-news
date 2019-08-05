@@ -42,6 +42,13 @@ exports.selectComments = ({
   sort_by = 'created_at',
   order = 'desc'
 }) => {
+  if (order !== 'asc') {
+    order = 'desc'
+  }
+  const permittedQueries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
+  if (!permittedQueries.includes(sort_by)) {
+    sort_by = 'created_at';
+  }
   return connection('comments')
     .where({
       article_id

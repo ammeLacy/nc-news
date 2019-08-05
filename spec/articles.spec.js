@@ -167,7 +167,7 @@ describe('/api', () => {
               })
             }))
         });
-        it('returns 200 and error message if passed an invalid order for displaying the articles and defaults to descending', () => {
+        it('returns 200 if passed an invalid order for displaying the articles and defaults to descending', () => {
           return request(app)
             .get('/api/articles?order=up')
             .expect(200)

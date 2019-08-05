@@ -11,7 +11,7 @@ const app = require('../app.js');
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles/article_id/comments', () => {
-    describe('GET', () => {
+    describe.only('GET', () => {
       it('returns 200 and an array of comments for the given article_id, each comment has a comment_id, votes, created_at, author and body key', () => {
         return request(app)
           .get('/api/articles/1/comments')
@@ -120,14 +120,18 @@ describe('/api', () => {
               expect(comments).to.be.sortedBy('author');
             })
         });
-        it('returns 400 and error message if passed an invalid order for displaying the comments', () => {
+        it('returns 200 and if passed an invalid order for displaying the comments and defaults to descending', () => {
           return request(app)
             .get('/api/articles/15/comments?order=up')
-            .expect(400)
+            .expect(200)
             .then(({
-              body
+              body: {
+                comments
+              }
             }) => {
-              expect(body.message).to.equal('invalid sort order')
+              expect(comments).to.be.sortedBy('created_at', {
+                descending: true
+              });
             })
         });
         it('returns 400 if an invalid format for the article-id is sent', () => {
@@ -202,7 +206,7 @@ describe('/api', () => {
               expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
             })
         });
-        it('returns 404 if a none existent article-id is sent', () => {
+        it('returns 404 if a none existent valid article-id is sent', () => {
           return request(app)
             .post('/api/articles/99999/comments')
             .send({

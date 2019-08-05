@@ -22,61 +22,49 @@ exports.postComment = (req, res, next) => {
     })
 }
 
-
-
 exports.getComments = (req, res, next) => {
-  if (req.query.order !== 'asc' && req.query.order !== 'desc' && req.query.order !== undefined) {
-    res.status(400).send({
-      message: 'invalid sort order'
-    })
-  } else {
-    let {
-      sort_by,
-      order
-    } = req.query;
-    const permittedQueries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
+  let {
+    order
+  } = req.query;
 
-    let ordering = {
-      order
-    };
-    if (permittedQueries.includes(sort_by)) {
-      ordering.sort_by = sort_by;
-    } else {
-      ordering.sort_by = 'created_at';
-    }
-    selectComments(req.params, ordering)
-      .then(comments => {
-        if (comments.length === 0) {
-          selectArticle(parseInt(req.params.article_id))
-            .then(
-              article => {
-                if (article === undefined) {
-                  res.status(404).send();
-                } else {
-                  res.status(200).send({
-                    comments: []
-                  })
-                }
+
+  let ordering = {
+    order
+  };
+
+  selectComments(req.params, ordering)
+    .then(comments => {
+      if (comments.length === 0) {
+        selectArticle(parseInt(req.params.article_id))
+          .then(
+            article => {
+              if (article === undefined) {
+                res.status(404).send();
+              } else {
+                res.status(200).send({
+                  comments: []
+                })
               }
-            )
-        } else {
-          const alteredComments = comments.map(comment => {
-            const {
-              article_id,
-              ...otherFields
-            } = comment;
-            return {
-              ...otherFields
-            };
-          })
-          res.status(200).send({
-            comments: alteredComments
-          })
-        }
-      }).catch(err => next(err))
+            }
+          )
+      } else {
+        const alteredComments = comments.map(comment => {
+          const {
+            article_id,
+            ...otherFields
+          } = comment;
+          return {
+            ...otherFields
+          };
+        })
+        res.status(200).send({
+          comments: alteredComments
+        })
+      }
+    }).catch(err => next(err))
 
-  }
 }
+//}
 
 exports.patchComment = (req, res, next) => {
   if (req.body.inc_votes !== undefined && !Number.isInteger(req.body.inc_votes)) {
