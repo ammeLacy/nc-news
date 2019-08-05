@@ -242,9 +242,10 @@ describe('/articles/:article_id ', () => {
             'votes')
         })
     });
-    it('returns a comment count key that returns the number of comments for the given article', () => {
+    it('returnss 200 and a comment count key that returns the number of comments for the given article', () => {
       return request(app)
         .get('/api/articles/1')
+        .expect(200)
         .then(({
           body: {
             article
@@ -257,6 +258,7 @@ describe('/articles/:article_id ', () => {
     it('returns 200 and vote column is set to 0 as a default', () => {
       return request(app)
         .get('/api/articles/2')
+        .expect(200)
         .then(({
           body: {
             article: {
