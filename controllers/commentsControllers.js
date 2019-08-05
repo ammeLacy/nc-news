@@ -23,13 +23,7 @@ exports.postComment = (req, res, next) => {
 }
 
 exports.getComments = (req, res, next) => {
-  let {
-    order
-  } = req.query;
-  let ordering = {
-    order
-  };
-  selectComments(req.params, ordering)
+  selectComments(req.params, req.query)
     .then(comments => {
       if (comments.length === 0) {
         selectArticle(parseInt(req.params.article_id))
