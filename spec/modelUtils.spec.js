@@ -11,24 +11,54 @@ const {
 
 describe('isValidVoteIncrement', () => {
   it('returns true when given a valid vote format', () => {
-    //parametise this [1, 3, 99, 1000]
+    const validVotes = [1, 3, 99, 1000, -99];
+    const result = [];
+    validVotes.forEach(element => {
+      if (isValidVoteIncrement(element)) {
+        return (result.push(element))
+      }
+    })
     const actual = isValidVoteIncrement(1);
     expect(actual).to.equal(true);
+    expect(result.length).to.equal(result.length);
   });
-  it('returns false when given an invalid vote format', () => { // parametise this ['a','"1",'1a','1.5', '/','\','?','@','&','#','(',')','{,'}','^','~','£','$',' ','+','-','_','!','*','%];
-    const actual = isValidVoteIncrement('a');
-    expect(actual).to.equal(false);
+  it('returns false when given an invalid vote format', () => {
+    const invalidVotes = ['a', '1a', 1.5, '/', '\\', '?', '@', '&', '#', '~', '(', ')', '{', '}', '^', '$', '+', '\'', '!', '*', '%'];
+    const result = [];
+    invalidVotes.forEach(element => {
+      if (isValidVoteIncrement(element)) {
+        return (result.push(element))
+      }
+    });
+    expect(result.length).to.equal(0);
   });
 });
 
-describe('isValidArticleId', () => {
+describe.only('isValidArticleId', () => {
   it('returns true when given a valid articleId', () => {
-    //paremetisation [1, 3, 9, 999]
     const actual = isValidArticleId(1);
     expect(actual).to.equal(true);
+
+    const validId = [1, 3, 9, 999];
+    const result = [];
+    validId.forEach(element => {
+      if (isValidArticleId(element)) {
+        return (result.push(element))
+      }
+    });
+    expect(result.length).to.equal(validId.length);
   });
-  it('returns ralse when given an invali article_Id', () => {
+  it('returns false when given an invalid article_Id', () => {
     const actual = isValidArticleId("a");
     expect(actual).to.equal(false);
+    const invalid_id = ['a', '1a', 1.5, -99, '/', '\\', '?', '@', '&', '#', '~', '(', ')', '{', '}', '^', '$', '+', '\'', '!', '*', '%'];
+    const result = [];
+    invalid_id.forEach(element => {
+      if (isValidArticleId(element)) {
+        return (result.push(element));
+      }
+    });
+    expect(result.length).to.equal(0);
   });
+
 });
