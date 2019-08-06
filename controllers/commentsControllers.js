@@ -10,7 +10,7 @@ const {
 } = require('../models/articlesModels.js');
 
 exports.postComment = (req, res, next) => {
-  selectArticle(parseInt(parseInt(req.params.article_id)))
+  selectArticle(parseInt(req.params.article_id))
     .then(article => {
       if (article === undefined) {
         res.status(404).send()
@@ -80,6 +80,7 @@ exports.removeComment = (req, res, next) => {
       } else {
         res.status(204).send();
       }
-    })
+    }).catch(err => next(err))
+
 
 }

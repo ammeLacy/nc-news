@@ -95,9 +95,14 @@ exports.updateComment = (
 exports.deleteComment = ({
   comment_id
 }) => {
-  //console.log("inside the delete comments model")
-  //console.log(comment_id)
-  return connection('comments')
-    .where('comments.comment_id', comment_id)
-    .del()
+  if (!isValidArticleId(comment_id)) {
+    return Promise.reject({
+      status: 400,
+      msg: 'Invalid comment_id'
+    })
+  } else {
+    return connection('comments')
+      .where('comments.comment_id', comment_id)
+      .del()
+  }
 }

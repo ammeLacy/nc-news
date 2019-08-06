@@ -488,17 +488,44 @@ describe('/api', () => {
         });
       })
     })
-    describe.only('DELETE', () => {
-      it('returns 204 status code when given a valid comment_id to delete ', () => {
+    describe('DELETE', () => {
+      it('returns 204 status when given a valid comment_id to delete and if sent the request again returns 404', () => {
         return request(app)
-          .delete('/api/comments/3')
-          .expect(204);
+          .delete('/api/comments/20')
+          .expect(204)
+          .then(ensureItemDeleted => {
+            return request(app)
+              .delete('/api/comments/20')
+              .expect(404);
+          })
       });
-      // describe('ERRORS', () => {
-      //   it('', () => {
-
-      //   });
-      //});
+      it('returns 404 when given a valid but none existant comment_id', () => {
+        return request(app)
+          .delete('/api/comments/21')
+          .expect(404);
+      });
+      describe('ERRORS', () => {
+        it('returns 204 and deletes comment if sent a query with the delete request', () => {
+          return request(app)
+            .delete('/api/comments/5?sortby=created_at')
+            .expect(204)
+            .then(ensureItemDeleted => {
+              return request(app)
+                .delete('/api/comments/5?sortby=created_at')
+                .expect(404)
+            })
+        });
+        it('returns 400 if given a invalid comment_id', () => {
+          return request(app)
+            .delete('/api/comments/1a/')
+            .expect(400);
+        });
+        it('returns 404 if given an invalid route', () => {
+          return request(app)
+            .delete('/api/comment/1')
+            .expect(404);
+        });
+      });
     });
   })
 });
