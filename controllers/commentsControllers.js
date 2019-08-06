@@ -1,7 +1,8 @@
 const {
   insertComment,
   selectComments,
-  updateComment
+  updateComment,
+  deleteComment
 } = require('../models/commentsModels.js');
 
 const {
@@ -68,4 +69,9 @@ exports.patchComment = (req, res, next) => {
         })
       }
     }).catch(err => next(err));
+}
+
+exports.removeComment = (req, res, next) => {
+  console.log("inside removeComments controller")
+  deleteComment();
 }

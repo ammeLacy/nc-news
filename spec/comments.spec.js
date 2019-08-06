@@ -2,6 +2,7 @@ process.env.NODE_ENV = "test";
 
 //requires
 const connection = require('../db/connection.js');
+//testing requires
 const chai = require('chai');
 chai.use(require("chai-sorted"));
 const expect = chai.expect;
@@ -487,12 +488,24 @@ describe('/api', () => {
         });
       })
     })
+    describe.only('DELETE', () => {
+      it('returns 204 status code when given a valid comment_id to delete ', () => {
+        return request(app)
+          .delete('/api/comments/3')
+          .expect(204);
+      });
+      // describe('ERRORS', () => {
+      //   it('', () => {
+
+      //   });
+      //});
+    });
   })
 });
 
 describe('INVALID METHODS', () => {
   it('status:405', () => {
-    const invalidMethods = ['put', 'delete', 'get', 'post'];
+    const invalidMethods = ['put', 'get', 'post'];
     const methodPromises = invalidMethods.map((method) => {
       return request(app)[method]('/api/comments/1')
         .expect(405)

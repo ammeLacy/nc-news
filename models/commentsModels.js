@@ -91,3 +91,7 @@ exports.updateComment = (
       .returning('*');
   }
 }
+
+exports.deleteComment = () => {
+  console.log("inside the delete comments model")
+}

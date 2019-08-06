@@ -5,7 +5,8 @@ const commentsRouter = require('express').Router({
 const {
   postComment,
   getComments,
-  patchComment
+  patchComment,
+  removeComment
 } = require('../controllers/commentsControllers.js');
 
 
@@ -24,7 +25,8 @@ commentsRouter
 commentsRouter
   .route('/:comment_id')
   .patch(patchComment)
+  .delete(removeComment)
   .all(send405Error)
-// amend to so can do delete
+
 
 module.exports = commentsRouter;
