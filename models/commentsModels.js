@@ -92,6 +92,12 @@ exports.updateComment = (
   }
 }
 
-exports.deleteComment = () => {
-  console.log("inside the delete comments model")
+exports.deleteComment = ({
+  comment_id
+}) => {
+  //console.log("inside the delete comments model")
+  //console.log(comment_id)
+  return connection('comments')
+    .where('comments.comment_id', comment_id)
+    .del()
 }
