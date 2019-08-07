@@ -55,7 +55,7 @@ exports.selectArticle = (
       })
       .from('articles')
       .leftJoin('comments', 'articles.article_id', 'comments.article_id')
-      .where('articles.article_id', parseInt(article_id))
+      .where('articles.article_id', article_id)
       .groupBy('articles.article_id')
       .first()
       .returning('*');

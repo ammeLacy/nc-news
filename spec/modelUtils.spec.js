@@ -34,7 +34,7 @@ describe('isValidVoteIncrement', () => {
   });
 });
 
-describe.only('isValidArticleId', () => {
+describe('isValidArticleId', () => {
   it('returns true when given a valid articleId', () => {
     const actual = isValidArticleId(1);
     expect(actual).to.equal(true);
