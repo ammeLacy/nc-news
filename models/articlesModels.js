@@ -43,7 +43,6 @@ exports.selectArticles = ({
 exports.selectArticle = (
   article_id
 ) => {
-  console.log(article_id)
   if (!isValidArticleId(article_id)) {
     return Promise.reject({
       status: 400,

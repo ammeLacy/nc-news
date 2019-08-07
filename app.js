@@ -8,10 +8,12 @@ const {
   serverError
 } = require('./errors/errors.js');
 
+
 //insert JSON
 app.use(express.json());
 
 //Routes
+app.use('/api', express.static(__dirname + '/public/endpoints.json'));
 app.use('/api', apiRouter);
 
 //Error handling
@@ -19,6 +21,5 @@ app.use(SQLerrors);
 app.use(customErrors);
 app.use(serverError);
 app.all('/*', routeError);
-
 
 module.exports = app;
