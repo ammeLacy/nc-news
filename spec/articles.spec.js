@@ -167,7 +167,22 @@ describe('/api', () => {
           })
 
       });
-      it('returns 404 when a non existant username is given', () => {
+      it('returns 200 all articles for a given author and topic (if they exist), in ascending order with a user specified limit', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge&topic=mitch&order=asc&limit=2')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.every(article => article.author === 'butter_bridge')).to.equal(true);
+            expect(articles.every(article => article.topic === 'mitch')).to.equal(true);
+            expect(articles).to.be.sortedBy('created_at');
+            expect(articles.length).to.equal(2);
+          })
+      });
+      it('returns 404 when a non existant author is given', () => {
         return request(app)
           .get('/api/articles?author=butter_bridger')
           .expect(404);

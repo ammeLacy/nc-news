@@ -71,8 +71,6 @@ describe('formatDates', () => {
   });
 });
 
-//exports.makeRefObj = list => {};
-
 describe('makeRefObj', () => {
   it('returns an empty array when list is undefined', () => {
     const actual = makeRefObj(undefined);
