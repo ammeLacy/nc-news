@@ -44,8 +44,8 @@ describe('/api', () => {
               articles
             }
           }) => {
-            expect(articles[14]).to.include.key('comment_count');
-            expect(parseInt(articles[14].comment_count)).to.equal(0);
+            expect(articles[3]).to.include.key('comment_count');
+            expect(parseInt(articles[3].comment_count)).to.equal(0);
           })
       });
       it('returns 200 and articles sorted by DEFAULT SORT ORDER CREATED_AT and DESCENDING as the DEFAULT ORDER ', () => {
@@ -141,6 +141,31 @@ describe('/api', () => {
               descending: true
             });
           })
+      });
+      it('returns 200 DEFAULT SORT_BY and ORDER_BY and DEFAULT of 10 articles per page', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.length).to.equal(10);
+          })
+      });
+      it('returns 200 DEFAULT SORT_BY and ORDER_BY and number of articles specified in the query', () => {
+        return request(app)
+          .get('/api/articles?limit=5')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.length).to.equal(5);
+          })
+
       });
       it('returns 404 when a non existant username is given', () => {
         return request(app)

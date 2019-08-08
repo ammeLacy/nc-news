@@ -9,7 +9,8 @@ exports.selectArticles = ({
   sort_by = 'created_at',
   order = 'desc',
   author,
-  topic
+  topic,
+  limit = 10
 }) => {
   if (order !== 'asc') {
     order = 'desc'
@@ -25,17 +26,21 @@ exports.selectArticles = ({
     .from('articles')
     .leftJoin('comments', 'articles.article_id', 'comments.article_id')
     .groupBy('articles.article_id').orderBy(sort_by, order)
+    .limit(limit)
     .modify((query) => {
       if (author) {
         query.where(
           'articles.author', author
         )
+        //.limit(limit)
       }
       if (topic) {
         query.where(
           'articles.topic', topic
         )
+        //.limit(limit)
       }
+
     });
 }
 
