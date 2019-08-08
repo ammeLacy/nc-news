@@ -206,6 +206,42 @@ describe('/api', () => {
               })
             }))
         });
+        it('returns 400 and a message if passed an invalid limt - floating point numbers', () => {
+          return request(app)
+            .get('/api/articles?limit=1.5')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('limit should be whole numbers');
+            })
+        });
+        it('returns 400 and a message if passed an invalid limit - negative numbers', () => {
+          return request(app)
+            .get('/api/articles?limit=-1')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('limit should be whole numbers')
+            })
+        });
+        it('returns 400 and a message if passed an invalid limit - string', () => {
+          return request(app)
+            .get('/api/articles?limit=a')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('limit should be whole numbers');
+            })
+        });
         it('returns 404 when given an incorrect path', () => {
           return request(app)
             .get('/api/article')

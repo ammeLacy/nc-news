@@ -15,33 +15,39 @@ exports.selectArticles = ({
   if (order !== 'asc') {
     order = 'desc'
   }
-  const permittedQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
-  if (!permittedQueries.includes(sort_by)) {
-    sort_by = 'created_at';
-  }
-  return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
-    .count({
-      comment_count: 'comment_id'
+  if (!isValidArticleId(limit)) {
+    return Promise.reject({
+      status: 400,
+      msg: "limit should be whole numbers"
     })
-    .from('articles')
-    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
-    .groupBy('articles.article_id').orderBy(sort_by, order)
-    .limit(limit)
-    .modify((query) => {
-      if (author) {
-        query.where(
-          'articles.author', author
-        )
-        //.limit(limit)
-      }
-      if (topic) {
-        query.where(
-          'articles.topic', topic
-        )
-        //.limit(limit)
-      }
+  } else {
+    const permittedQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
+    if (!permittedQueries.includes(sort_by)) {
+      sort_by = 'created_at';
+    }
+    return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
+      .count({
+        comment_count: 'comment_id'
+      })
+      .from('articles')
+      .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+      .groupBy('articles.article_id').orderBy(sort_by, order)
+      .limit(limit)
+      .modify((query) => {
+        if (author) {
+          query.where(
+            'articles.author', author
+          )
+        }
+        if (topic) {
+          query.where(
+            'articles.topic', topic
+          )
+        }
+      });
+  }
 
-    });
+
 }
 
 
