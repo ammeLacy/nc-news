@@ -59,7 +59,7 @@ describe('/api', () => {
           .get('/api/users/none_existing_user')
           .expect(404)
       });
-      it('returns 404 when given an invalid username', () => { // this bit is inconsistent
+      it('returns 404 when given an invalid username', () => {
         return request(app)
           .get('/api/users/1')
           .expect(404);

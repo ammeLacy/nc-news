@@ -312,7 +312,7 @@ describe('/api', () => {
       });
       describe('INVALID METHODS', () => {
         it('status:405', () => {
-          const invalidMethods = ['post', 'put', 'delete']; // remove post 
+          const invalidMethods = ['post', 'put', 'delete'];
           const methodPromises = invalidMethods.map((method) => {
             return request(app)[method]('/api/articles')
               .expect(405)
@@ -607,11 +607,11 @@ describe('/articles/:article_id ', () => {
       });
     });
   });
-  // describe('DELETE', () => {
-  //   describe('ERRORS', () => {
+  describe('DELETE', () => {
+    describe('ERRORS', () => {
 
-  //   });
-  // });
+    });
+  });
   describe('INVALID METHODS', () => {
     //test will need updating to allow delete
     it('status:405', () => {
@@ -627,7 +627,6 @@ describe('/articles/:article_id ', () => {
             expect(msg).to.equal('method not allowed');
           });
       });
-      // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
       return Promise.all(methodPromises);
     });
   });

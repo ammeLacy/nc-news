@@ -17,7 +17,6 @@ articlesRouter
   .get(sendArticles)
   .all(send405Error);
 
-// amend to so can do delete
 //Single article
 articlesRouter
   .route('/:article_id')

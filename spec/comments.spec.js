@@ -97,7 +97,7 @@ describe('/api', () => {
       });
       describe('ERRORS', () => {
         it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
-          return request(app) //?sort_by=body
+          return request(app)
             .get('/api/articles/15/comments?sort_by=invalid_query')
             .expect(200)
             .then(({
@@ -309,7 +309,7 @@ describe('/api', () => {
     });
     describe('INVALID ROUTES', () => {
       it('status:405', () => {
-        const invalidMethods = ['put', 'delete']; // will need amending to allow delete 
+        const invalidMethods = ['put', 'delete'];
         const methodPromises = invalidMethods.map((method) => {
           return request(app)[method]('/api/articles/1/comments')
             .expect(405)
