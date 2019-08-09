@@ -30,7 +30,6 @@ exports.SQLerrors = (err, req, res, next) => {
     } else {
       message = errCodes[err.code].split(' - ')[1];
     }
-    //else if (err.code === '42703' )
     res.status(400).send({
       message: message
     });

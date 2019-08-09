@@ -67,7 +67,6 @@ describe('/api', () => {
                   expect(msg).to.equal('method not allowed');
                 });
             });
-            // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
             return Promise.all(methodPromises);
           });
         });

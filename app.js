@@ -11,7 +11,7 @@ const {
 } = require('./errors/errors.js');
 
 
-//insert JSON
+//Insert JSON
 app.use(express.json());
 
 //Routes

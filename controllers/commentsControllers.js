@@ -74,7 +74,6 @@ exports.patchComment = (req, res, next) => {
 }
 
 exports.removeComment = (req, res, next) => {
-  //console.log("inside removeComments controller")
   deleteComment(req.params)
     .then(deletedRow => {
       if (deletedRow === 0) {
