@@ -13,14 +13,16 @@ exports.postComment = (req, res, next) => {
   selectArticle(parseInt(req.params.article_id))
     .then(article => {
       if (article === undefined) {
-        res.status(404).send()
-      } else insertComment(req.body, req.params)
-        .then(comment => {
-          res.status(201).send({
-            comment: comment[0]
-          })
-        }).catch(err => next(err));
-    })
+        res.status(404).send();
+      } else {
+        insertComment(req.body, req.params)
+          .then(comment => {
+            res.status(201).send({
+              comment: comment[0]
+            })
+          }).catch(err => next(err));
+      }
+    }).catch(err => next(err));
 }
 
 exports.getComments = (req, res, next) => {

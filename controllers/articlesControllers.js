@@ -1,6 +1,7 @@
 const {
   selectArticle,
   selectArticles,
+  selectArticlesCount,
   updateArticle
 } = require('../models/articlesModels.js');
 
@@ -18,7 +19,13 @@ exports.sendArticle = (req, res, next) => {
 }
 
 exports.sendArticles = (req, res, next) => {
-  selectArticles(
+  let total_count = 0;
+  const promisedCounts = selectArticlesCount(req.query).then(counts => {
+    if (counts !== undefined) {
+      total_count = counts.total_count;
+    }
+  }).then(
+    selectArticles(
       req.query
     )
     .then(articles => {
@@ -26,11 +33,12 @@ exports.sendArticles = (req, res, next) => {
         res.status(404).send();
       } else {
         res.status(200).send({
+          total_count,
           articles
         })
       }
-    })
-    .catch(err => next(err));
+    }).catch(err => next(err))
+  ).catch(err => next(err));
 }
 
 
@@ -44,5 +52,5 @@ exports.patchArticle = (req, res, next) => {
           article: article[0]
         })
       }
-    }).catch(next);
+    }).catch(err => next(err));
 }

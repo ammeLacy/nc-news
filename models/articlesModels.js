@@ -4,7 +4,6 @@ const {
   isValidVoteIncrement
 } = require('./modelUtils.js');
 
-
 exports.selectArticles = ({
   sort_by = 'created_at',
   order = 'desc',
@@ -46,8 +45,28 @@ exports.selectArticles = ({
         }
       });
   }
-
-
+}
+exports.selectArticlesCount = ({
+  author,
+  topic
+}) => {
+  return connection
+    .count({
+      total_count: '*'
+    })
+    .from('articles')
+    .modify((query) => {
+      if (author) {
+        query.where(
+          'articles.author', author
+        )
+      }
+      if (topic) {
+        query.where(
+          'articles.topic', topic
+        )
+      }
+    }).first();
 }
 
 

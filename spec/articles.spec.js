@@ -182,6 +182,53 @@ describe('/api', () => {
             expect(articles.length).to.equal(2);
           })
       });
+      it('returns 200 a total_count property displaying the total number of articles', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({
+            body: {
+              total_count
+            }
+          }) => {
+            expect(total_count).to.equal(15);
+          })
+
+      });
+      it('returns 200 and total_count property for author filter - total count of articles by that author', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge')
+          .expect(200)
+          .then(({
+            body: {
+              total_count
+            }
+          }) => {
+            expect(total_count).to.equal(3);
+          })
+      });
+      it('returns 200 and total count property for topic filter - total count of articles for that topic', () => {
+        return request(app)
+          .get('/api/articles?topic=mitch')
+          .then(({
+            body: {
+              total_count
+            }
+          }) => {
+            expect(total_count).to.equal(11);
+          })
+      });
+      it('returns 200 and total count property for combined author and topic queries - total_count of articles written by an author on a topic', () => {
+        return request(app)
+          .get('/api/articles?author=butter_bridge&topic=mitch')
+          .then(({
+            body: {
+              total_count
+            }
+          }) => {
+            expect(total_count).to.equal(3);
+          })
+      });
       it('returns 404 when a non existant author is given', () => {
         return request(app)
           .get('/api/articles?author=butter_bridger')
