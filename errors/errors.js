@@ -37,7 +37,7 @@ exports.SQLerrors = (err, req, res, next) => {
 
 exports.send405Error = (req, res, next) => {
   res.status(405).send({
-    msg: 'method not allowed'
+    message: 'method not allowed'
   });
 };
 
@@ -56,6 +56,6 @@ exports.serverError = (err, req, res, next) => {
   //console.log("<<<<<<< SERVER ERROR");
   console.log(err)
   res.status(500).send({
-    msg: 'internal server error'
+    message: 'internal server error'
   });
 }

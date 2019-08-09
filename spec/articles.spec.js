@@ -277,6 +277,7 @@ describe('/api', () => {
                 message
               }
             }) => {
+
               expect(message).to.equal('limit should be whole numbers');
             })
         });
@@ -318,10 +319,10 @@ describe('/api', () => {
               .expect(405)
               .then(({
                 body: {
-                  msg
+                  message
                 }
               }) => {
-                expect(msg).to.equal('method not allowed');
+                expect(message).to.equal('method not allowed');
               });
           });
           return Promise.all(methodPromises);
@@ -613,7 +614,6 @@ describe('/articles/:article_id ', () => {
     });
   });
   describe('INVALID METHODS', () => {
-    //test will need updating to allow delete
     it('status:405', () => {
       const invalidMethods = ['put', 'delete'];
       const methodPromises = invalidMethods.map((method) => {
@@ -621,10 +621,10 @@ describe('/articles/:article_id ', () => {
           .expect(405)
           .then(({
             body: {
-              msg
+              message
             }
           }) => {
-            expect(msg).to.equal('method not allowed');
+            expect(message).to.equal('method not allowed');
           });
       });
       return Promise.all(methodPromises);

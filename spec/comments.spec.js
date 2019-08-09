@@ -315,10 +315,10 @@ describe('/api', () => {
             .expect(405)
             .then(({
               body: {
-                msg
+                message
               }
             }) => {
-              expect(msg).to.equal('method not allowed');
+              expect(message).to.equal('method not allowed');
             });
         });
         return Promise.all(methodPromises);
@@ -528,7 +528,6 @@ describe('/api', () => {
     });
   })
 });
-
 describe('INVALID METHODS', () => {
   it('status:405', () => {
     const invalidMethods = ['put', 'get', 'post'];
@@ -537,10 +536,10 @@ describe('INVALID METHODS', () => {
         .expect(405)
         .then(({
           body: {
-            msg
+            message
           }
         }) => {
-          expect(msg).to.equal('method not allowed');
+          expect(message).to.equal('method not allowed');
         });
     });
     return Promise.all(methodPromises);
