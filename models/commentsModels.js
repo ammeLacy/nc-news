@@ -49,6 +49,12 @@ exports.selectComments = ({
   if (order !== 'asc') {
     order = 'desc'
   }
+  if (!isValidArticleId(limit)) {
+    return Promise.reject({
+      status: 400,
+      message: 'limit must be a whole number'
+    })
+  }
   const permittedQueries = ['comment_id', 'votes', 'created_at', 'author', 'body'];
   if (!permittedQueries.includes(sort_by)) {
     sort_by = 'created_at';

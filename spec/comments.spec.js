@@ -176,14 +176,52 @@ describe('/api', () => {
             });
           })
       });
-      it('returns 400 if an invalid format for the article-id is sent', () => {
+      it('returns 400 and a message if an invalid format for the article-id is sent', () => {
         return request(app)
           .get('/api/articles/1a/comments')
           .expect(400)
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.equal('invalid input syntax for integer: "1a"');
+            expect(message).to.equal('invalid input syntax for integer: "1a"');
+          })
+      });
+      it('returns 400 and message if passed an invalid limit - floating point number ', () => {
+        return request(app)
+          .get('/api/articles/1/comments?limit=1.5')
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('limit must be a whole number');
+          })
+      });
+      it('returns 400 and a message if passed an invalid limit - negative number', () => {
+        return request(app)
+          .get('/api/articles/1/comments?limit=-1')
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('limit must be a whole number');
+          })
+      });
+      it('returns 400 and a message if passed an invalid limit - string', () => {
+        return request(app)
+          .get('/api/articles/1/comments?limit=a')
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('limit must be a whole number');
           })
       });
       it('returns 404 if an invalid route is sent', () => {
