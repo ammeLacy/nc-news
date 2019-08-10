@@ -277,7 +277,6 @@ describe('/api', () => {
                 message
               }
             }) => {
-
               expect(message).to.equal('limit should be whole numbers');
             })
         });
@@ -415,9 +414,11 @@ describe('/articles/:article_id ', () => {
           .get('/api/articles/1a')
           .expect(400)
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.equal('Invalid article id');
+            expect(message).to.equal('Invalid article id');
           })
       });
       it('returns 400 when given an invalid format for the article_id - 1.5', () => {
@@ -425,9 +426,11 @@ describe('/articles/:article_id ', () => {
           .get('/api/articles/1.5')
           .expect(400)
           .then(({
-            body
+            body: {
+              message
+            }
           }) => {
-            expect(body.message).to.equal('Invalid article id')
+            expect(message).to.equal('Invalid article id')
           })
       });
       it('returns 404 when given an incorrect path', () => {

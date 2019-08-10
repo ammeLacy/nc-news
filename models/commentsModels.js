@@ -11,21 +11,21 @@ exports.insertComment = (body, {
     username,
     ...fields
   } = body;
-  if (username === undefined && body.body === undefined) {
+  if (body.username === undefined && body.body === undefined) {
     return Promise.reject({
       status: 400,
-      msg: 'username and body must not be null'
+      message: 'username and body must not be null'
     });
   }
-  if (username === undefined) {
+  if (body.username === undefined) {
     return Promise.reject({
       status: 400,
-      msg: 'username must not be null'
+      message: 'username must not be null'
     })
   } else if (body.body === undefined) {
     return Promise.reject({
       status: 400,
-      msg: 'body must not be null'
+      message: 'body must not be null'
     })
   } else {
     return connection('comments')
@@ -70,17 +70,17 @@ exports.updateComment = (
   if (!isValidArticleId(comment_id)) {
     return Promise.reject({
       status: 400,
-      msg: 'Invalid comment_id'
+      message: 'Invalid comment_id'
     })
   } else if (inc_votes === undefined) {
     return Promise.reject({
       status: 400,
-      msg: 'inc_votes missing'
+      message: 'inc_votes missing'
     })
   } else if (!isValidVoteIncrement(inc_votes)) {
     return Promise.reject({
       status: 400,
-      msg: 'votes should be whole numbers'
+      message: 'votes should be whole numbers'
     })
   } else {
     return connection('comments')
@@ -98,7 +98,7 @@ exports.deleteComment = ({
   if (!isValidArticleId(comment_id)) {
     return Promise.reject({
       status: 400,
-      msg: 'Invalid comment_id'
+      message: 'Invalid comment_id'
     })
   } else {
     return connection('comments')

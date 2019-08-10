@@ -17,7 +17,7 @@ exports.selectArticles = ({
   if (!isValidArticleId(limit)) {
     return Promise.reject({
       status: 400,
-      msg: "limit should be whole numbers"
+      message: "limit should be whole numbers"
     })
   } else {
     const permittedQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
@@ -76,7 +76,7 @@ exports.selectArticle = (
   if (!isValidArticleId(article_id)) {
     return Promise.reject({
       status: 400,
-      msg: 'Invalid article id'
+      message: 'Invalid article id'
     })
   } else {
     return connection.select('articles.*')
@@ -102,17 +102,17 @@ exports.updateArticle = (body, {
   if (!isValidArticleId(article_id)) {
     return Promise.reject({
       status: 400,
-      msg: 'Invalid article_id'
+      message: 'Invalid article_id'
     })
   } else if (inc_votes === undefined) {
     return Promise.reject({
       status: 400,
-      msg: 'inc_votes missing',
+      message: 'inc_votes missing',
     });
   } else if (!isValidVoteIncrement(inc_votes)) {
     return Promise.reject({
       status: 400,
-      msg: 'votes should be whole numbers'
+      message: 'votes should be whole numbers'
     })
   } else {
     return connection('articles')

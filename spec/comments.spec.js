@@ -240,9 +240,11 @@ describe('/api', () => {
             })
             .expect(400)
             .then(({
-              body
+              body: {
+                message
+              }
             }) => {
-              expect(body.message).to.equal('author does not exist');
+              expect(message).to.equal('author does not exist');
             })
         });
         it('returns 400 if a username is not sent in the request body', () => {
