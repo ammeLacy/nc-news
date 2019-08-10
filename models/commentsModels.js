@@ -43,7 +43,8 @@ exports.selectComments = ({
   article_id
 }, {
   sort_by = 'created_at',
-  order = 'desc'
+  order = 'desc',
+  limit = 10
 }) => {
   if (order !== 'asc') {
     order = 'desc'
@@ -56,6 +57,7 @@ exports.selectComments = ({
     .where({
       article_id
     }).orderBy(sort_by, order)
+    .limit(limit)
     .returning('*');
 }
 

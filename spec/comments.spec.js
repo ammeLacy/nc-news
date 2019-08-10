@@ -2,7 +2,6 @@ process.env.NODE_ENV = "test";
 
 //requires
 const connection = require('../db/connection.js');
-//testing requires
 const chai = require('chai');
 chai.use(require("chai-sorted"));
 const expect = chai.expect;
@@ -39,7 +38,7 @@ describe('/api', () => {
             expect(comments.length).to.equal(0);
           })
       });
-      it('returns 200 and comments sorted by DEFAULT SORT ORDER CREATED_AT and DESCENDING as the DEFAULT order', () => {
+      it('returns 200 and comments sorted by DEFAULT SORT ORDER CREATED_AT and DESCENDING as the DEFAULT ORDER', () => {
         return request(app)
           .get('/api/articles/15/comments')
           .expect(200)
@@ -87,76 +86,155 @@ describe('/api', () => {
             })
         })
       });
-
-      it('returns 404 when given a valid format article id for an article that does not exist', () => {
+      it('returns 200 and a DEFAULT LIMIT of 10 comments per valid specified article, DEFAULT SORT ORDER, DEFAULT ORDER_BY', () => {
         return request(app)
-          .get('/api/articles/1000/comments')
-          .expect(404);
-
-
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments.length).to.equal(10);
+            expect(comments).to.be.sortedBy('created_at', {
+              descending: true
+            });
+          })
+      })
+      it('returns 200 and a user specified limit of articles, DEFAULT SORT ORDER, DEFAULT ORDER_BY ', () => {
+        return request(app)
+          .get('/api/articles/1/comments?limit=5 ')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments.length).to.equal(5);
+            expect(comments).to.be.sortedBy('created_at', {
+              descending: true
+            })
+          })
       });
-      describe('ERRORS', () => {
-        it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
-          return request(app)
-            .get('/api/articles/15/comments?sort_by=invalid_query')
-            .expect(200)
-            .then(({
-              body: {
-                comments
-              }
-            }) => {
-              expect(comments).to.be.sortedBy('created_at', {
-                descending: true
-              });
-            })
-        });
-        it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
-          return request(app)
-            .get('/api/articles/15/comments?sort_by=author&sort_by=createdat&order=asc')
-            .expect(200)
-            .then(({
-              body: {
-                comments
-              }
-            }) => {
-              expect(comments).to.be.sortedBy('author');
-            })
-        });
-        it('returns 200 and if passed an invalid order for displaying the comments and defaults to descending', () => {
-          return request(app)
-            .get('/api/articles/15/comments?order=up')
-            .expect(200)
-            .then(({
-              body: {
-                comments
-              }
-            }) => {
-              expect(comments).to.be.sortedBy('created_at', {
-                descending: true
-              });
-            })
-        });
-        it('returns 400 if an invalid format for the article-id is sent', () => {
-          return request(app)
-            .get('/api/articles/1a/comments')
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('invalid input syntax for integer: "1a"');
-            })
-        });
-        it('returns 404 if an invalid route is sent', () => {
-          return request(app)
-            .get('/api/articles/1/comment')
-            .expect(404);
-        });
+      it('returns 200, user specified sort_order in ascending order, with a user specified limit  ', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=author&order=asc&limit=3')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments).to.be.sortedBy('author');
+            expect(comments.length).to.equal(3);
+          })
       });
     });
-    describe('POST', () => {
-      it('accepts an object with the following properties:username body and returns 201 and the posted comment', () => {
+    it('returns 404 when given a valid format article id for an article that does not exist', () => {
+      return request(app)
+        .get('/api/articles/1000/comments')
+        .expect(404);
+    });
+    describe('ERRORS', () => {
+      it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
         return request(app)
-          .post('/api/articles/1/comments')
+          .get('/api/articles/15/comments?sort_by=invalid_query')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments).to.be.sortedBy('created_at', {
+              descending: true
+            });
+          })
+      });
+      it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
+        return request(app)
+          .get('/api/articles/15/comments?sort_by=author&sort_by=createdat&order=asc')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments).to.be.sortedBy('author');
+          })
+      });
+      it('returns 200 and if passed an invalid order for displaying the comments and defaults to descending', () => {
+        return request(app)
+          .get('/api/articles/15/comments?order=up')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments).to.be.sortedBy('created_at', {
+              descending: true
+            });
+          })
+      });
+      it('returns 400 if an invalid format for the article-id is sent', () => {
+        return request(app)
+          .get('/api/articles/1a/comments')
+          .expect(400)
+          .then(({
+            body
+          }) => {
+            expect(body.message).to.equal('invalid input syntax for integer: "1a"');
+          })
+      });
+      it('returns 404 if an invalid route is sent', () => {
+        return request(app)
+          .get('/api/articles/1/comment')
+          .expect(404);
+      });
+    });
+  });
+  describe('POST', () => {
+    it('accepts an object with the following properties:username body and returns 201 and the posted comment', () => {
+      return request(app)
+        .post('/api/articles/1/comments')
+        .send({
+          "username": "butter_bridge",
+          "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        })
+        .expect(201)
+        .then(({
+          body: {
+            comment
+          }
+        }) => {
+          expect(comment).to.include.keys(
+            'comment_id',
+            'author',
+            'article_id',
+            'votes',
+            'created_at'
+          )
+          expect(comment).to.be.a("object");
+          expect(comment.author).to.equal('butter_bridge');
+          expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+        })
+    });
+    it('able to accept a long comment', () => {
+      return request(app)
+        .post('/api/articles/1/comments')
+        .send({
+          "username": "butter_bridge",
+          "body": `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis magna nisi, sed consectetur dui tincidunt et. Nullam sed libero ante. Praesent non risus elit. In efficitur erat vel enim dictum, vitae ornare eros finibus. In hac habitasse platea dictumst. Sed sollicitudin facilisis luctus. Vestibulum ullamcorper semper orci eget imperdiet. Aenean eu augue blandit, malesuada lectus et, efficitur sapien. Donec imperdiet diam sem, vel rhoncus nulla vehicula ac. Sed sit amet diam pulvinar, pulvinar nunc non, dignissim libero. Quisque a dui tempor, porttitor elit non, iaculis enim. Aliquam iaculis est vel eros lacinia, non consequat libero maximus. Vestibulum ut sapien dolor. Suspendisse vitae lobortis massa. In magna mi, venenatis vitae neque eu, interdum tempor ex. Duis finibus est vitae justo aliquet accumsan.
+
+            Ut vitae rutrum erat, ac lobortis quam. Cras vel volutpat sem. Nulla pellentesque a sapien sed vestibulum. Quisque posuere a tortor nec fringilla. Ut a nunc ut neque tincidunt sollicitudin. Ut egestas imperdiet pulvinar. Nullam leo orci, ullamcorper at dictum sit amet, ornare vel est. Nunc semper fringilla libero at pretium. Cras a vulputate nulla, eget eleifend arcu. Donec vitae ex dui. Praesent lobortis porttitor sapien.`
+        })
+        .expect(201);
+    });
+
+    describe('ERRORS', () => {
+      it('ignores query string and returns 201 and created comment if passed a query string', () => {
+        return request(app)
+          .post('/api/articles/1/comments?sort_by=created_at')
           .send({
             "username": "butter_bridge",
             "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
@@ -167,167 +245,129 @@ describe('/api', () => {
               comment
             }
           }) => {
-            expect(comment).to.include.keys(
-              'comment_id',
-              'author',
-              'article_id',
-              'votes',
-              'created_at'
-            )
-            expect(comment).to.be.a("object");
-            expect(comment.author).to.equal('butter_bridge');
-            expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+            expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
           })
       });
-      it('able to accept a long comment', () => {
+      it('returns 404 if a none existent valid article-id is sent', () => {
+        return request(app)
+          .post('/api/articles/99999/comments')
+          .send({
+            "username": "butter_bridge",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          })
+          .expect(404);
+      });
+      it('returns 400 if an invalid article-id is sent', () => {
+        return request(app)
+          .post('/api/articles/1a/comments')
+          .send({
+            "username": "butter_bridge",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          })
+          .expect(400)
+          .then(({
+            body
+          }) => {
+            expect(body.message).to.equal('invalid input syntax for integer: "1a"')
+          })
+      });
+      it('returns 400 if a none-existent username is sent ', () => {
         return request(app)
           .post('/api/articles/1/comments')
           .send({
-            "username": "butter_bridge",
-            "body": `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis magna nisi, sed consectetur dui tincidunt et. Nullam sed libero ante. Praesent non risus elit. In efficitur erat vel enim dictum, vitae ornare eros finibus. In hac habitasse platea dictumst. Sed sollicitudin facilisis luctus. Vestibulum ullamcorper semper orci eget imperdiet. Aenean eu augue blandit, malesuada lectus et, efficitur sapien. Donec imperdiet diam sem, vel rhoncus nulla vehicula ac. Sed sit amet diam pulvinar, pulvinar nunc non, dignissim libero. Quisque a dui tempor, porttitor elit non, iaculis enim. Aliquam iaculis est vel eros lacinia, non consequat libero maximus. Vestibulum ut sapien dolor. Suspendisse vitae lobortis massa. In magna mi, venenatis vitae neque eu, interdum tempor ex. Duis finibus est vitae justo aliquet accumsan.
-
-            Ut vitae rutrum erat, ac lobortis quam. Cras vel volutpat sem. Nulla pellentesque a sapien sed vestibulum. Quisque posuere a tortor nec fringilla. Ut a nunc ut neque tincidunt sollicitudin. Ut egestas imperdiet pulvinar. Nullam leo orci, ullamcorper at dictum sit amet, ornare vel est. Nunc semper fringilla libero at pretium. Cras a vulputate nulla, eget eleifend arcu. Donec vitae ex dui. Praesent lobortis porttitor sapien.`
+            "username": "kathy",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
           })
-          .expect(201);
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('author does not exist');
+          })
       });
-
-      describe('ERRORS', () => {
-        it('ignores query string and returns 201 and created comment if passed a query string', () => {
-          return request(app)
-            .post('/api/articles/1/comments?sort_by=created_at')
-            .send({
-              "username": "butter_bridge",
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(201)
-            .then(({
-              body: {
-                comment
-              }
-            }) => {
-              expect(comment.body).to.equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
-            })
-        });
-        it('returns 404 if a none existent valid article-id is sent', () => {
-          return request(app)
-            .post('/api/articles/99999/comments')
-            .send({
-              "username": "butter_bridge",
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(404);
-        });
-        it('returns 400 if an invalid article-id is sent', () => {
-          return request(app)
-            .post('/api/articles/1a/comments')
-            .send({
-              "username": "butter_bridge",
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('invalid input syntax for integer: "1a"')
-            })
-        });
-        it('returns 400 if a none-existent username is sent ', () => {
-          return request(app)
-            .post('/api/articles/1/comments')
-            .send({
-              "username": "kathy",
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(400)
-            .then(({
-              body: {
-                message
-              }
-            }) => {
-              expect(message).to.equal('author does not exist');
-            })
-        });
-        it('returns 400 if a username is not sent in the request body', () => {
-          return request(app)
-            .post('/api/articles/1/comments')
-            .send({
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('username must not be null');
-            })
-        });
-        it('returns 400 if a body is not not sent in the request body', () => {
-          return request(app)
-            .post('/api/articles/1/comments')
-            .send({
-              "username": "butter_bridge"
-            })
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('body must not be null');
-            })
-        });
-        it('returns 400 if username and body are not sent in the request body', () => {
-          return request(app)
-            .post('/api/articles/1/comments')
-            .send({})
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('username and body must not be null');
-            })
-        });
-        it('returns 400 if the username is longer than 255 characters', () => {
-          return request(app)
-            .post('/api/articles/1/comments')
-            .send({
-              "username": `Curabitur placerat maximus condimentum. Nullam id enim ligula. Phasellus eu dignissim velit, et condimentum mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras ultricies malesuada urna, ut tempus sem feugiat sit amet. Duis id felis ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras et libero a lorem mattis dictum non sed dui. Duis in lacus eget est vestibulum maximus. Mauris ante dolor, eleifend vel pulvinar eget, tincidunt ut leo.",`,
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(400)
-            .then(({
-              body
-            }) => {
-              expect(body.message).to.equal('value too long for type character');
-            })
-        });
-        it('returns 404 if an invalid route is sent', () => {
-          return request(app)
-            .post('/api/articles/1/comment')
-            .send({
-              "username": "butter_bridge",
-              "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            })
-            .expect(404);
-        });
+      it('returns 400 if a username is not sent in the request body', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          })
+          .expect(400)
+          .then(({
+            body
+          }) => {
+            expect(body.message).to.equal('username must not be null');
+          })
       });
-    });
-    describe('INVALID ROUTES', () => {
-      it('status:405', () => {
-        const invalidMethods = ['put', 'delete'];
-        const methodPromises = invalidMethods.map((method) => {
-          return request(app)[method]('/api/articles/1/comments')
-            .expect(405)
-            .then(({
-              body: {
-                message
-              }
-            }) => {
-              expect(message).to.equal('method not allowed');
-            });
-        });
-        return Promise.all(methodPromises);
+      it('returns 400 if a body is not not sent in the request body', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({
+            "username": "butter_bridge"
+          })
+          .expect(400)
+          .then(({
+            body
+          }) => {
+            expect(body.message).to.equal('body must not be null');
+          })
+      });
+      it('returns 400 if username and body are not sent in the request body', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({})
+          .expect(400)
+          .then(({
+            body
+          }) => {
+            expect(body.message).to.equal('username and body must not be null');
+          })
+      });
+      it('returns 400 if the username is longer than 255 characters', () => {
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send({
+            "username": `Curabitur placerat maximus condimentum. Nullam id enim ligula. Phasellus eu dignissim velit, et condimentum mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras ultricies malesuada urna, ut tempus sem feugiat sit amet. Duis id felis ipsum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras et libero a lorem mattis dictum non sed dui. Duis in lacus eget est vestibulum maximus. Mauris ante dolor, eleifend vel pulvinar eget, tincidunt ut leo.",`,
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          })
+          .expect(400)
+          .then(({
+            body
+          }) => {
+            expect(body.message).to.equal('value too long for type character');
+          })
+      });
+      it('returns 404 if an invalid route is sent', () => {
+        return request(app)
+          .post('/api/articles/1/comment')
+          .send({
+            "username": "butter_bridge",
+            "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          })
+          .expect(404);
       });
     });
   });
+  describe('INVALID ROUTES', () => {
+    it('status:405', () => {
+      const invalidMethods = ['put', 'delete'];
+      const methodPromises = invalidMethods.map((method) => {
+        return request(app)[method]('/api/articles/1/comments')
+          .expect(405)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('method not allowed');
+          });
+      });
+      return Promise.all(methodPromises);
+    });
+  });
 });
+
 
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
