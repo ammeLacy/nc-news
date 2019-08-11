@@ -221,12 +221,39 @@ describe('/api', () => {
       it('returns 200 and total count property for combined author and topic queries - total_count of articles written by an author on a topic', () => {
         return request(app)
           .get('/api/articles?author=butter_bridge&topic=mitch')
+          .expect(200)
           .then(({
             body: {
               total_count
             }
           }) => {
             expect(total_count).to.equal(3);
+          })
+      });
+      it('returns 200 and DEFAULTS to the first page when no page number is specified - DEFAULT SORT_BY, DEFAULT ORDER, DEFAULT LIMIT', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles[0].title).to.equal('Living in the shadow of a great man');
+            expect(articles[9].title).to.equal('Seven inspirational thought leaders from Manchester UK');
+          })
+      });
+      it.only('returns 200 and displays any articles for the page specified, DEFAULT SORT_BY, DEFAULT ORDER, DEFAULT LIMIT', () => {
+        return request(app)
+          .get('/api/articles?p=2')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles[0].title).to.equal('Am I a cat?');
+            expect(articles[articles.length - 1].title).to.equal('Moustache');
           })
       });
       it('returns 404 when a non existant author is given', () => {
@@ -364,7 +391,7 @@ describe('/articles/:article_id ', () => {
             'votes')
         })
     });
-    it('returnss 200 and a comment count key that returns the number of comments for the given article', () => {
+    it('returns 200 and a comment count key that returns the number of comments for the given article', () => {
       return request(app)
         .get('/api/articles/1')
         .expect(200)

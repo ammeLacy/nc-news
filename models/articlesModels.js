@@ -9,7 +9,8 @@ exports.selectArticles = ({
   order = 'desc',
   author,
   topic,
-  limit = 10
+  limit = 10,
+  p = 1
 }) => {
   if (order !== 'asc') {
     order = 'desc'
@@ -24,6 +25,7 @@ exports.selectArticles = ({
     if (!permittedQueries.includes(sort_by)) {
       sort_by = 'created_at';
     }
+    const offset = (p - 1) * limit;
     return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
       .count({
         comment_count: 'comment_id'
@@ -32,6 +34,7 @@ exports.selectArticles = ({
       .leftJoin('comments', 'articles.article_id', 'comments.article_id')
       .groupBy('articles.article_id').orderBy(sort_by, order)
       .limit(limit)
+      .offset(offset)
       .modify((query) => {
         if (author) {
           query.where(
