@@ -44,7 +44,8 @@ exports.selectComments = ({
 }, {
   sort_by = 'created_at',
   order = 'desc',
-  limit = 10
+  limit = 10,
+  p = 1
 }) => {
   if (order !== 'asc') {
     order = 'desc'
@@ -59,11 +60,13 @@ exports.selectComments = ({
   if (!permittedQueries.includes(sort_by)) {
     sort_by = 'created_at';
   }
+  const offset = (p - 1) * limit;
   return connection('comments')
     .where({
       article_id
     }).orderBy(sort_by, order)
     .limit(limit)
+    .offset(offset)
     .returning('*');
 }
 

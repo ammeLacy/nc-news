@@ -129,6 +129,47 @@ describe('/api', () => {
             expect(comments.length).to.equal(3);
           })
       });
+      it('returns 200 and DEFAULTS to the first page when no page number is specified - DEFAULT SORT_BY, DEFAULT ORDER, DEFAULT LIMIT', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments[0].comment_id).to.equal(2);
+            expect(comments[9].comment_id).to.equal(11);
+          })
+      });
+      it('returns 200 and displays any comments for the page specified, DEFAULT SORT_BY, DEFAULT ORDER, DEFAULT LIMIT', () => {
+        return request(app)
+          .get('/api/articles/1/comments?&p=2')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments[0].body).to.equal('Massive intercranial brain haemorrhage');
+            expect(comments[comments.length - 1].body).to.equal('This morning, I showered for nine minutes.');
+          })
+      });
+      it('returns 200, displays the articles for page specified, with a specified SORT_BY, ORDER is ascending and a custom limit is specified', () => {
+        return request(app)
+          .get('/api/articles/1/comments?sort_by=comment_id&order=asc&limit=2&p=3')
+          .expect(200)
+          .then(({
+            body: {
+              comments
+            }
+          }) => {
+            expect(comments[0].body).to.equal('I hate streaming eyes even more');
+            expect(comments[comments.length - 1].body).to.equal('Lobster pot');
+            expect(comments).to.be.sortedBy('comment_id');
+            expect(comments.length).to.equal(2);
+          })
+      });
     });
     it('returns 404 when given a valid format article id for an article that does not exist', () => {
       return request(app)
