@@ -15,7 +15,7 @@ exports.selectArticles = ({
   if (order !== 'asc') {
     order = 'desc'
   }
-  if (!isValidArticleId(limit)) {
+  if (!isValidArticleId(limit || p)) {
     return Promise.reject({
       status: 400,
       message: "limit should be whole numbers"
@@ -24,6 +24,12 @@ exports.selectArticles = ({
     const permittedQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes', 'comment_count'];
     if (!permittedQueries.includes(sort_by)) {
       sort_by = 'created_at';
+    }
+    if (!isValidArticleId(p)) {
+      return Promise.reject({
+        status: 400,
+        message: "page numbers should be whole numbers"
+      })
     }
     const offset = (p - 1) * limit;
     return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')

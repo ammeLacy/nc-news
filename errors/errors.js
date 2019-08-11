@@ -5,8 +5,8 @@ exports.routeError = (req, res, next) => {
 
 exports.SQLerrors = (err, req, res, next) => {
   // console.log("<<<<<<<<< SQL ERRORS");
-  // console.log(err.message);
-  // console.log(err.code)
+  //console.log(err.message);
+  //console.log(err.code)
   if (err.code) {
     const errCodes = {
       42703: err.message, // column does not exist
@@ -14,7 +14,9 @@ exports.SQLerrors = (err, req, res, next) => {
       23503: err.message, // foreign_key_violation
       22001: err.message, // string_data_right_truncation - data to long for field
       22003: err.message, // 	numeric_value_out_of_range
-      "22P02": err.message //	invalid_text_representation
+      '2201W': err.message, // invalid_row_count_in_limit_clause
+      '22P02': err.message, // invalid_text_representation
+      '2201X': err.message, // invalid_row_count_in_result_offset_clause
     }
 
     let message;
@@ -55,7 +57,7 @@ exports.customErrors = (err, req, res, next) => {
 
 exports.serverError = (err, req, res, next) => {
   //console.log("<<<<<<< SERVER ERROR");
-  //console.log(err)
+  console.log(err)
   res.status(500).send({
     message: 'internal server error'
   });

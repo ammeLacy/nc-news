@@ -243,7 +243,7 @@ describe('/api', () => {
             expect(articles[9].title).to.equal('Seven inspirational thought leaders from Manchester UK');
           })
       });
-      it.only('returns 200 and displays any articles for the page specified, DEFAULT SORT_BY, DEFAULT ORDER, DEFAULT LIMIT', () => {
+      it('returns 200 and displays any articles for the page specified, DEFAULT SORT_BY, DEFAULT ORDER, DEFAULT LIMIT', () => {
         return request(app)
           .get('/api/articles?p=2')
           .expect(200)
@@ -254,6 +254,23 @@ describe('/api', () => {
           }) => {
             expect(articles[0].title).to.equal('Am I a cat?');
             expect(articles[articles.length - 1].title).to.equal('Moustache');
+          })
+      });
+      it('returns 200, displays the articles for page specified, with a specified SORT_BY, ORDER is ascending, topic and author filters are applied and a custom limit is specified', () => {
+        return request(app)
+          .get('/api/articles?author=icellusedkars&topic=mitch&order=asc&sort_by=title&p=2&limit=2')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles[0].title).to.equal('Does Mitch predate civilisation?');
+            expect(articles[1].title).to.equal('Eight pug gifs that remind me of mitch');
+            expect(articles).to.be.sortedBy('title');
+            expect(articles.every(article => article.author === 'icellusedkars'));
+            expect(articles.every(article => article.topic === 'mitch'));
+            expect(articles.length).equals(2);
           })
       });
       it('returns 404 when a non existant author is given', () => {
@@ -267,7 +284,7 @@ describe('/api', () => {
           .expect(404);
       });
       describe('ERRORS', () => {
-        it('returns 200 and DEFFAULT SORT ORDER of CREATED_AT when passed an invalid column to query by', () => {
+        it('returns 200 and DEFFAULT SORT ORDER of CREATED_AT when passed an none-existent column to query by', () => {
           return request(app)
             .get('/api/articles?sort_by=body')
             .expect(200)
@@ -329,6 +346,42 @@ describe('/api', () => {
               }
             }) => {
               expect(message).to.equal('limit should be whole numbers');
+            })
+        });
+        it('returns 400 and a message if passed an invalid page number - floating point numbers', () => {
+          return request(app)
+            .get('/api/articles?p=0.5')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('page numbers should be whole numbers')
+            })
+        });
+        it('returns 400 and a message if passed an invalid page number - negative number', () => {
+          return request(app)
+            .get('/api/articles?p=-1')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('page numbers should be whole numbers')
+            })
+        });
+        it('returns 400 and a message if passed an invalid page number - string', () => {
+          return request(app)
+            .get('/api/articles?p=a')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('page numbers should be whole numbers')
             })
         });
         it('returns 404 when given an incorrect path', () => {
