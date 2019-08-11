@@ -691,11 +691,6 @@ describe('/articles/:article_id ', () => {
       });
     });
   });
-  describe('DELETE', () => {
-    describe('ERRORS', () => {
-
-    });
-  });
   describe('INVALID METHODS', () => {
     it('status:405', () => {
       const invalidMethods = ['put', 'delete'];

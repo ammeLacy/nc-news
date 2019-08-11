@@ -61,6 +61,12 @@ exports.selectComments = ({
     sort_by = 'created_at';
   }
   const offset = (p - 1) * limit;
+  if (!isValidArticleId(p)) {
+    return Promise.reject({
+      status: 400,
+      message: 'page numbers must be a whole number'
+    })
+  }
   return connection('comments')
     .where({
       article_id

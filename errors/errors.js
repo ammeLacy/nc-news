@@ -5,7 +5,7 @@ exports.routeError = (req, res, next) => {
 
 exports.SQLerrors = (err, req, res, next) => {
   // console.log("<<<<<<<<< SQL ERRORS");
-  //console.log(err.message);
+  console.log(err.message);
   //console.log(err.code)
   if (err.code) {
     const errCodes = {
@@ -16,7 +16,7 @@ exports.SQLerrors = (err, req, res, next) => {
       22003: err.message, // 	numeric_value_out_of_range
       '2201W': err.message, // invalid_row_count_in_limit_clause
       '22P02': err.message, // invalid_text_representation
-      '2201X': err.message, // invalid_row_count_in_result_offset_clause
+      '2201X': err.message // invalid_row_count_in_result_offset_clause
     }
 
     let message;
@@ -28,6 +28,8 @@ exports.SQLerrors = (err, req, res, next) => {
       message = errCodes[err.code].split(' - ')[1].split(' varying')[0];
     } else if (err.code === 22003) {
       message = errCodes[err.code].split('value')[0]
+    } else if (err.code === '2201X') {
+      message = errCodes[err.code].split(' - ')[1].split('OFFSET')[1];
     } else {
       message = errCodes[err.code].split(' - ')[1];
     }

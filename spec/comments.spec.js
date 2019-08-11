@@ -265,6 +265,42 @@ describe('/api', () => {
             expect(message).to.equal('limit must be a whole number');
           })
       });
+      it('returns 400 and a message if passed an invalid page number - floating point number', () => {
+        return request(app)
+          .get('/api/articles/1/comments?p=0.5')
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('page numbers must be a whole number');
+          })
+      });
+      it('returns 400 and a message if passed an invalid page number - negative number', () => {
+        return request(app)
+          .get('/api/articles/1/comments?p=-1')
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('page numbers must be a whole number');
+          })
+      });
+      it('returns 400 and a message if passed an invalid page number - string', () => {
+        return request(app)
+          .get('/api/articles/1/comments?p=a')
+          .expect(400)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('page numbers must be a whole number')
+          })
+      });
       it('returns 404 if an invalid route is sent', () => {
         return request(app)
           .get('/api/articles/1/comment')

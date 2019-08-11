@@ -15,7 +15,7 @@ exports.selectArticles = ({
   if (order !== 'asc') {
     order = 'desc'
   }
-  if (!isValidArticleId(limit || p)) {
+  if (!isValidArticleId(limit)) {
     return Promise.reject({
       status: 400,
       message: "limit should be whole numbers"
