@@ -1,7 +1,11 @@
-const dbConfig = require('../knexfile');
+const ENV = process.env.NODE_ENV || 'development';
+const dbConfig =
+  ENV === 'production' ? {
+    client: 'pg',
+    connection: process.env.DATABASE_URL
+  } :
+  require('../knexfile');
 const connection = require('knex')(dbConfig);
-const setupPaginator = require('knex-paginator');
-setupPaginator(connection);
 
 
 module.exports = connection;
