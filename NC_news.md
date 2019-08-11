@@ -3,7 +3,7 @@
 An API for interacting with the nc_news application, which uses a PostgresSQL ,interactions with the databasenter image description heree are undertaken by K'nex. The application consists of articles, topics and users. Articles can be created, filtered and sorted and have their votes updated, Comments can be commented made on articles and these in turn can be updated, and deleted. Users and topics can also be created and deleted.
 
 ## Link
-- *insert link to herouk*
+- https://kat-news.herokuapp.com
 
 ## Installation 
 #### Git
