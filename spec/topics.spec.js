@@ -58,7 +58,19 @@ describe('/api', () => {
         it('it returns 201 and the created topic', () => {
           return request(app)
             .post('/api/topics')
+            .send({
+              "slug": "butter_bridge",
+              "description": "Lorem ipsum dolor"
+            })
             .expect(201)
+            .then(({
+              body: {
+                topic
+              }
+            }) => {
+              expect(topic.slug).to.equal('butter_bridge');
+              expect(topic.description).to.equal('Lorem ipsum dolor')
+            })
         });
       });
     });

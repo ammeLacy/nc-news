@@ -16,6 +16,12 @@ exports.sendTopics = (req, res, next) => {
 
 
 exports.postTopic = (req, res, next) => {
-  console.log('in the postTopic controller')
-  insertTopic()
+  insertTopic(req.body)
+    .then(topic => {
+      res.status(201).send({
+        topic: topic[0]
+      })
+    })
+    .catch(err => next(err));
 }
+

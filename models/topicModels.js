@@ -5,6 +5,14 @@ exports.selectTopics = () => {
     .from('topics');
 }
 
-exports.insertTopic = () => {
-  console.log('in the insertTopic model')
+exports.insertTopic = (body) => {
+
+  const { slug, description } = body;
+  return connection('topics')
+    .insert({
+      slug,
+      description
+    })
+    .returning('*')
 }
+
