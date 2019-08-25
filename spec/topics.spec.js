@@ -6,7 +6,7 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-describe.only('/api', () => {
+describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/topics', () => {
     describe('/GET', () => {
@@ -210,7 +210,7 @@ describe.only('/api', () => {
               expect(message).to.equal('value too long for type character');
             })
         });
-        it.only('returns 400 and an error message if sent duplicate slugs', () => {
+        it('returns 400 and an error message if sent duplicate slugs', () => {
           const firstTopic = request(app)
             .post('/api/topics')
             .send({

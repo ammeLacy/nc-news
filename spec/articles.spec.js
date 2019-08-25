@@ -391,7 +391,7 @@ describe('/api', () => {
         });
       });
     });
-    describe('POST', () => {
+    describe.only('POST', () => {
       it('returns 201 and the created artice', () => {
         return request(app)
           .post('/api/articles')
@@ -402,6 +402,27 @@ describe('/api', () => {
             "topic": "mitch",
           })
           .expect(201)
+          .then(({
+            body: {
+              article
+            }
+          }) => {
+            expect(article.author).to.equal("butter_bridge");
+            expect(article).to.all.keys(
+              'article_id',
+              'title',
+              'body',
+              'author',
+              'votes',
+              'topic',
+              'created_at'
+            )
+          })
+      });
+      describe('ERRORS', () => {
+        it('', () => {
+
+        });
       });
     });
   });
