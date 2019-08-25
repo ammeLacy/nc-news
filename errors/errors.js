@@ -12,6 +12,7 @@ exports.SQLerrors = (err, req, res, next) => {
       42703: err.message, // column does not exist
       23502: err.message, // not_null_violation 
       23503: err.message, // foreign_key_violation
+      23505: err.message, // unique_violation
       22001: err.message, // string_data_right_truncation - data to long for field
       22003: err.message, // 	numeric_value_out_of_range
       '2201W': err.message, // invalid_row_count_in_limit_clause
@@ -22,7 +23,8 @@ exports.SQLerrors = (err, req, res, next) => {
     let message;
     if (err.code === '23503') {
       message = errCodes[err.code].split('constraint')[1].split('_')[1] + ' does not exist';
-    } else if (err.code === '23502') {
+    }
+    if (err.code === '23502') {
       message = errCodes[err.code].split(' * ')[1].split('"')[1] + " cannot be null";
     } else if (err.code === '22001') {
       message = errCodes[err.code].split(' - ')[1].split(' varying')[0];
@@ -30,6 +32,8 @@ exports.SQLerrors = (err, req, res, next) => {
       message = errCodes[err.code].split('value')[0]
     } else if (err.code === '2201X') {
       message = errCodes[err.code].split(' - ')[1].split('OFFSET')[1];
+    } else if (err.code === '23505') {
+      message = 'Already exists';
     } else {
       message = errCodes[err.code].split(' - ')[1];
     }

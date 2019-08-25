@@ -96,8 +96,142 @@ describe('/api', () => {
               .send({
                 "description": "Lorem ipsum dolor"
               })
-              .expect(400);
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal("slug must not be null");
+              })
           });
+          it('returns 400 and an error message if the body does not include a description', () => {
+            return request(app)
+              .post('/api/topics')
+              .send({
+                "slug": "butter_bridge"
+              })
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal("description must not be null");
+              })
+          });
+          it('returns 400 an an error message if slug and description are undefined', () => {
+            return request(app)
+              .post('/api/topics')
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal("slug and description must not be null")
+              })
+          });
+          it('returns 400 and an error message if slug is misspelt', () => {
+            request(app)
+              .post('/api/topics')
+              .send({
+                "slu": "butter_bridge",
+                "description": "Lorem ipsum"
+              })
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal('slug must not be null');
+              })
+          });
+          it('returns 400 and error message if description is  misspelt', () => {
+            request(app)
+              .post('/api/topics')
+              .send({
+                "slug": "butter_bridge",
+                "descriptio": "Lorem ipsum dolore"
+              })
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal('description must not be null');
+              })
+          });
+          it('returns 400 and an error message if sent a post request with no body ', () => {
+            return request(app)
+              .post('/api/topics')
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal('slug and description must not be null')
+              })
+          });
+          it('returns 400 and an error message if sent a slug longer than 255 characters long', () => {
+            return request(app)
+              .post('/api/topics')
+              .send({
+                "slug": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis magna nisi, sed consectetur dui tincidunt et. Nullam sed libero ante. Praesent non risus elit. In efficitur erat vel enim dictum, vitae ornare eros finibus. In hac habitasse platea dictumst. Sed sollicitudin facilisis luctus. Vestibulum ullamcorper semper orci eget imperdiet. Aenean eu augue blandit,",
+                "description": "Lorem impsum dolor"
+
+              })
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal('value too long for type character')
+              })
+          });
+          it('returns 400 and and an error message if sent a description longer than 255 characters long', () => {
+            return request(app)
+              .post('/api/topics')
+              .send({
+                "slug": "butter_bridge",
+                "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis magna nisi, sed consectetur dui tincidunt et. Nullam sed libero ante. Praesent non risus elit. In efficitur erat vel enim dictum, vitae ornare eros finibus. In hac habitasse platea dictumst. Sed sollicitudin facilisis luctus. Vestibulum ullamcorper semper orci eget imperdiet. Aenean eu augue blandit,"
+              })
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal('value too long for type character');
+              })
+          });
+          it.only('returns 400 and an error message if sent duplicate slugs', () => {
+            return request(app)
+              .post('/api/topics')
+              .send({
+                "slug": "butter_bridge",
+                "description": "Lorem ipsum"
+              })
+              .expect(201);
+          });
+          return request(app)
+            .post('/api/topics')
+            .send({
+              "slug": "butter_bridge",
+              "description": "Nullam sed"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              console.log(message)
+            })
         });
       });
     });
