@@ -390,23 +390,28 @@ describe('/api', () => {
             .expect(404);
         });
       });
-      describe('INVALID METHODS', () => {
-        it('status:405', () => {
-          const invalidMethods = ['post', 'put', 'delete'];
-          const methodPromises = invalidMethods.map((method) => {
-            return request(app)[method]('/api/articles')
-              .expect(405)
-              .then(({
-                body: {
-                  message
-                }
-              }) => {
-                expect(message).to.equal('method not allowed');
-              });
-          });
-          return Promise.all(methodPromises);
-        });
+    });
+    describe('POST', () => {
+      it('returns 201 and posted article', () => {
+        return request(app)
       });
+    });
+  });
+  describe('INVALID METHODS', () => {
+    it('status:405', () => {
+      const invalidMethods = ['put', 'delete', 'patch'];
+      const methodPromises = invalidMethods.map((method) => {
+        return request(app)[method]('/api/articles')
+          .expect(405)
+          .then(({
+            body: {
+              message
+            }
+          }) => {
+            expect(message).to.equal('method not allowed');
+          });
+      });
+      return Promise.all(methodPromises);
     });
   });
 });
@@ -693,7 +698,7 @@ describe('/articles/:article_id ', () => {
   });
   describe('INVALID METHODS', () => {
     it('status:405', () => {
-      const invalidMethods = ['put', 'delete'];
+      const invalidMethods = ['put', 'delete', 'post'];
       const methodPromises = invalidMethods.map((method) => {
         return request(app)[method]('/api/articles/1')
           .expect(405)

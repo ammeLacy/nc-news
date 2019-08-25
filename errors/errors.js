@@ -4,9 +4,9 @@ exports.routeError = (req, res, next) => {
 }
 
 exports.SQLerrors = (err, req, res, next) => {
-  console.log("<<<<<<<<< SQL ERRORS");
-  console.log(err.message);
-  console.log(err.code)
+  // console.log("<<<<<<<<< SQL ERRORS");
+  // console.log(err.message);
+  // console.log(err.code)
   if (err.code) {
     const errCodes = {
       42703: err.message, // column does not exist
@@ -23,8 +23,7 @@ exports.SQLerrors = (err, req, res, next) => {
     let message;
     if (err.code === '23503') {
       message = errCodes[err.code].split('constraint')[1].split('_')[1] + ' does not exist';
-    }
-    if (err.code === '23502') {
+    } else if (err.code === '23502') {
       message = errCodes[err.code].split(' * ')[1].split('"')[1] + " cannot be null";
     } else if (err.code === '22001') {
       message = errCodes[err.code].split(' - ')[1].split(' varying')[0];

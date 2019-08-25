@@ -54,7 +54,7 @@ describe('/api', () => {
         });
 
       });
-      describe.only('/POST', () => {
+      describe('/POST', () => {
         it('it returns 201 and the created topic', () => {
           return request(app)
             .post('/api/topics')
@@ -209,7 +209,7 @@ describe('/api', () => {
                 expect(message).to.equal('value too long for type character');
               })
           });
-          it.only('returns 400 and an error message if sent duplicate slugs', () => {
+          it('returns 400 and an error message if sent duplicate slugs', () => {
             return request(app)
               .post('/api/topics')
               .send({
@@ -230,7 +230,6 @@ describe('/api', () => {
                 message
               }
             }) => {
-              console.log(message)
             })
         });
       });

@@ -3,9 +3,9 @@ const articlesRouter = require('express').Router();
 const {
   sendArticle,
   sendArticles,
-  patchArticle
+  patchArticle,
+  postArticle
 } = require('../controllers/articlesControllers.js');
-
 
 const {
   send405Error
@@ -15,6 +15,7 @@ const {
 articlesRouter
   .route('')
   .get(sendArticles)
+  .post(postArticle)
   .all(send405Error);
 
 //Single article

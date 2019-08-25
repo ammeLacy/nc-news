@@ -15,7 +15,14 @@ describe('/api', () => {
         .then(({
           body
         }) => {
-          expect(body).to.have.all.keys('GET /api', 'GET /api/articles', 'GET /api/articles/:article_id', 'PATCH /api/articles/:article_id', 'GET /api/articles/:article_id/comments', 'POST /api/articles/:article_id/comments', 'GET /api/topics', 'GET /users/:username ');
+          expect(body).to.have.all.keys('GET /api', 'GET /api/articles',
+            'GET /api/articles/:article_id',
+            'PATCH /api/articles/:article_id',
+            'GET /api/articles/:article_id/comments', 'POST /api/articles/:article_id/comments',
+            'GET /api/topics',
+            'POST /api/topics',
+            'GET /users/:username ')
+
         })
     });
   });

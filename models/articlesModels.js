@@ -4,6 +4,7 @@ const {
   isValidVoteIncrement
 } = require('./modelUtils.js');
 
+//multiple articles
 exports.selectArticles = ({
   sort_by = 'created_at',
   order = 'desc',
@@ -77,8 +78,6 @@ exports.selectArticlesCount = ({
       }
     }).first();
 }
-
-
 exports.selectArticle = (
   article_id
 ) => {
@@ -101,7 +100,7 @@ exports.selectArticle = (
   }
 }
 
-
+//single articles
 exports.updateArticle = (body, {
   article_id
 }) => {
@@ -131,4 +130,8 @@ exports.updateArticle = (body, {
       .increment('votes', inc_votes)
       .returning('*');
   }
+}
+
+exports.insertArticle = () => {
+  console.log('inside insertArticle controller')
 }
