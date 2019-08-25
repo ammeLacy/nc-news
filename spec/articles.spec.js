@@ -392,8 +392,16 @@ describe('/api', () => {
       });
     });
     describe('POST', () => {
-      it('returns 201 and posted article', () => {
+      it('returns 201 and the created artice', () => {
         return request(app)
+          .post('/api/articles')
+          .send({
+            "author": "butter_bridge",
+            "title": "trees",
+            "body": "Lorem impsom",
+            "topic": "mitch",
+          })
+          .expect(201)
       });
     });
   });

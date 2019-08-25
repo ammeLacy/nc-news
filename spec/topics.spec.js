@@ -6,7 +6,7 @@ const expect = chai.expect;
 const request = require('supertest');
 const app = require('../app.js');
 
-describe('/api', () => {
+describe.only('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/topics', () => {
     describe('/GET', () => {
@@ -210,27 +210,22 @@ describe('/api', () => {
               })
           });
           it('returns 400 and an error message if sent duplicate slugs', () => {
-            return request(app)
+            const firstTopic = request(app)
               .post('/api/topics')
               .send({
                 "slug": "butter_bridge",
                 "description": "Lorem ipsum"
               })
               .expect(201);
+            const secondTopic = request(app)
+              .post('/api/topics')
+              .send({
+                "slug": "butter_bridge",
+                "description": "Nullam sed"
+              })
+              .expect(400);
+            return Promise.all([firstTopic, secondTopic]);
           });
-          return request(app)
-            .post('/api/topics')
-            .send({
-              "slug": "butter_bridge",
-              "description": "Nullam sed"
-            })
-            .expect(400)
-            .then(({
-              body: {
-                message
-              }
-            }) => {
-            })
         });
       });
     });

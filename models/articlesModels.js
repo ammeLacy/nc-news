@@ -99,7 +99,6 @@ exports.selectArticle = (
       .returning('*');
   }
 }
-
 //single articles
 exports.updateArticle = (body, {
   article_id
@@ -131,7 +130,15 @@ exports.updateArticle = (body, {
       .returning('*');
   }
 }
-
-exports.insertArticle = () => {
-  console.log('inside insertArticle controller')
+exports.insertArticle = (article) => {
+  const { author, title, body, topic } = article
+  return connection('articles')
+    .insert({
+      author,
+      title,
+      body,
+      topic
+    })
+    .returning('*');
 }
+

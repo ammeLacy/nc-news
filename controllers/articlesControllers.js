@@ -31,6 +31,14 @@ exports.sendArticles = (req, res, next) => {
 }
 
 //single articles
+exports.postArticle = (req, res, next) => {
+  insertArticle(req.body)
+    .then(article => {
+      res.status(201).send({
+        article
+      })
+    }).catch(err => next(err))
+}
 exports.sendArticle = (req, res, next) => {
   selectArticle(req.params.article_id)
     .then(article => {
@@ -43,7 +51,6 @@ exports.sendArticle = (req, res, next) => {
       }
     }).catch(err => next(err));
 }
-
 exports.patchArticle = (req, res, next) => {
   updateArticle(req.body, req.params)
     .then(article => {
@@ -57,6 +64,3 @@ exports.patchArticle = (req, res, next) => {
     }).catch(err => next(err));
 }
 
-exports.postArticle = (req, res, next) => {
-  insertArticle()
-}
