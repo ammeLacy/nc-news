@@ -81,6 +81,16 @@
       ]
     }
   },
+  "POST /api/topics": {
+    "description": "accepts an object in the form of {slug: butter_bridge, description: ipsom dolor}",
+    "queries": [],
+    "exampleResponse": {
+      "topic": {
+        "slug": "butter_bridge",
+        "description": "impsom dolore"
+      }
+    }
+  },
   "GET /users/:username ": {
     "description": "serves an object representing the user",
     "queries": [],
