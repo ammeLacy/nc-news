@@ -51,13 +51,13 @@ module.exports = { ...customConfig[ENV], ...baseConfig };
 #### Database  set up and seeding 
 6. Once the dependencies have finished installing set up the database by running *``npm run setup-dbs``* which will create both the development and test databases. 
 7. To create the tables on both the development and test databases use *``npm run migrate-latest``*
-8. To populate data  run *knex seed run*
+8. To populate data  run *npm run seed*
 
 ##### To restart the database use the following 
 a) *``npm run setup-dbs``*
 b) *``npm run  migrate-rollback*``*
 c) *``npm migrate-latest``*
-d)  *``knex seed run``*
+d) *``npm seed run``*
 
 #### Testing 
  9. To make use use of the testing suite, the following developer dependencies are required
@@ -107,19 +107,19 @@ console.log(`listening on port ${PORT}`);
 d) to run the development environment use  *``npm run dev``*
 
 ##  Directory Structure
-
-├──  controllers
-├──  db 
-│   ├──  data
-│   │   ├──  development-data 
-│   │   └──  test-data  
-│   ├──  migrations
-│   ├──  seeds
-│   └──  utils
-├──  errors 
-├──  models 
-├──  public 
-├──  routes
-└──  spec 
+
+├──  controllers
+├──  db 
+│   ├──  data
+│   │   ├──  development-data 
+│   │   └──  test-data  
+│   ├──  migrations
+│   ├──  seeds
+│   └──  utils
+├── errors 
+├── models 
+├── public 
+├── routes
+└── spec 
 
 

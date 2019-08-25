@@ -69,8 +69,35 @@ describe('/api', () => {
               }
             }) => {
               expect(topic.slug).to.equal('butter_bridge');
-              expect(topic.description).to.equal('Lorem ipsum dolor')
+              expect(topic.description).to.equal('Lorem ipsum dolor');
             })
+        });
+        describe('ERRORS', () => {
+          it('returns 201 and the created article if passed a query string in the post request', () => {
+            return request(app)
+              .post('/api/topics?popular')
+              .send({
+                "slug": "butter_bridge",
+                "description": "Lorem ipsum dolor"
+              })
+              .expect(201)
+              .then(({
+                body: {
+                  topic
+                }
+              }) => {
+                expect(topic.slug).to.equal('butter_bridge');
+                expect(topic.description).to.equal('Lorem ipsum dolor');
+              })
+          });
+          it('returns 400 and an error message if the body does not include a slug', () => {
+            return request(app)
+              .post('/api/topics')
+              .send({
+                "description": "Lorem ipsum dolor"
+              })
+              .expect(400);
+          });
         });
       });
     });
