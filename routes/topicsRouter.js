@@ -1,6 +1,7 @@
 const topicsRouter = require('express').Router();
 const {
-  sendTopics
+  sendTopics,
+  postTopic
 } = require('../controllers/topicControllers.js');
 
 const {
@@ -10,6 +11,7 @@ const {
 topicsRouter
   .route('/')
   .get(sendTopics)
+  .post(postTopic)
   .all(send405Error);
 
 module.exports = topicsRouter;

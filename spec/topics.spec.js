@@ -8,8 +8,8 @@ const app = require('../app.js');
 
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
-  describe('/GET', () => {
-    describe('/topics', () => {
+  describe('/topics', () => {
+    describe('/GET', () => {
       it('responds 200 and an array of topics', () => {
         return request(app)
           .get('/api/topics')
@@ -33,7 +33,6 @@ describe('/api', () => {
           }) => {
             expect(topics[0]).to.have.keys('slug', 'description');
           })
-
       });
       describe('ERRORS', () => {
         it('returns 200 and the default page when sent a query request', () => {
@@ -53,23 +52,31 @@ describe('/api', () => {
             .get('/api/invalid_topic_route')
             .expect(404);
         });
-        describe('INVALID METHODS', () => {
-          it('status:405', () => {
-            const invalidMethods = ['patch', 'put', 'delete'];
-            const methodPromises = invalidMethods.map((method) => {
-              return request(app)[method]('/api/topics')
-                .expect(405)
-                .then(({
-                  body: {
-                    message
-                  }
-                }) => {
-                  expect(message).to.equal('method not allowed');
-                });
-            });
-            return Promise.all(methodPromises);
-          });
+
+      });
+      describe.only('/POST', () => {
+        it('it returns 201 and the created topic', () => {
+          return request(app)
+            .post('/api/topics')
+            .expect(201)
         });
+      });
+    });
+    describe('INVALID METHODS', () => {
+      it('status:405', () => {
+        const invalidMethods = ['patch', 'put', 'delete'];
+        const methodPromises = invalidMethods.map((method) => {
+          return request(app)[method]('/api/topics')
+            .expect(405)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('method not allowed');
+            });
+        });
+        return Promise.all(methodPromises);
       });
     });
   });

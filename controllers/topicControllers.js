@@ -1,5 +1,6 @@
 const {
   selectTopics,
+  insertTopic
 } = require('../models/topicModels.js');
 
 
@@ -11,5 +12,10 @@ exports.sendTopics = (req, res, next) => {
       })
     })
     .catch(err => next(err));
+}
 
+
+exports.postTopic = (req, res, next) => {
+  console.log('in the postTopic controller')
+  insertTopic()
 }
