@@ -132,20 +132,21 @@ exports.updateArticle = (body, {
   }
 }
 exports.insertArticle = (article) => {
-  const { author, title, body, topic } = article;
-  if (author === undefined) {
-    return Promise.reject({
-      status: 400,
-      message: "author must not be null"
-    })
+  const requiredKeys = { author: "", title: "", body: "", topic: "" };
+  if (!hasAllKeys(requiredKeys, article)) {
+    return Promise.reject({ status: 400, message: "articles must have author, title, body and topic fields" })
   }
-  return connection('articles')
-    .insert({
-      author,
-      title,
-      body,
-      topic
-    })
-    .returning('*');
+  else {
+    const { author, title, body, topic } = article;
+    return connection('articles')
+      .insert({
+        author,
+        title,
+        body,
+        topic
+      })
+      .returning('*');
+  }
+
 }
 

@@ -438,7 +438,7 @@ describe('/api', () => {
               expect(article.author).to.equal("butter_bridge");
             })
         });
-        it('returns 400 if sent an article that does not  include author', () => {
+        it('returns 400 and a message if sent an article that does not  include author', () => {
           return request(app)
             .post('/api/articles')
             .send({
@@ -453,8 +453,59 @@ describe('/api', () => {
               }
             }) => {
               console.log(message)
-              expect(message).to.equal('author must not be null');
+              expect(message).to.equal('articles must have author, title, body and topic fields');
             })
+        });
+        it('returns 400 and a message if sent and article that does not include title', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "butter_bridge",
+              "body": "Lorem impsom",
+              "topic": "mitch"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('articles must have author, title, body and topic fields')
+            });
+        });
+        it('returns 400 and a message if sent an article that does not include a body', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "butter_bridge",
+              "title": "trees",
+              "topic": "mitch"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('articles must have author, title, body and topic fields');
+            })
+        });
+        it('returns 400 and a message if sent an article that does not include a topic', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "butter_bridge",
+              "title": "trees",
+              "body": "Lorem impsom",
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('articles must have author, title, body and topic fields')
+            });
         });
       });
     });

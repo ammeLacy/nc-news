@@ -65,7 +65,7 @@ describe('isValidArticleId', () => {
 
 });
 
-describe.only('hasAllKeys', () => {
+describe('hasAllKeys', () => {
   it('returns true when comparting keys of two objects each with one same key ', () => {
     const key1 = 'key1';
     const object1 = { key1 };
