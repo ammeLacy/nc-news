@@ -399,7 +399,7 @@ describe('/api', () => {
             "author": "butter_bridge",
             "title": "trees",
             "body": "Lorem impsom",
-            "topic": "mitch",
+            "topic": "mitch"
           })
           .expect(201)
           .then(({
@@ -420,8 +420,41 @@ describe('/api', () => {
           })
       });
       describe('ERRORS', () => {
-        it('', () => {
-
+        it('returns 201 and the created article if sent a query string', () => {
+          return request(app)
+            .post('/api/articles?new')
+            .send({
+              "author": "butter_bridge",
+              "title": "trees",
+              "body": "Lorem impsom",
+              "topic": "mitch"
+            })
+            .expect(201)
+            .then(({
+              body: {
+                article
+              }
+            }) => {
+              expect(article.author).to.equal("butter_bridge");
+            })
+        });
+        it('returns 400 if sent an article that does not  include author', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "title": "trees",
+              "body": "Lorem impsom",
+              "topic": "mitch"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              console.log(message)
+              expect(message).to.equal('author cannot be null');
+            })
         });
       });
     });

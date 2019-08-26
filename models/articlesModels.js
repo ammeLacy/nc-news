@@ -131,7 +131,8 @@ exports.updateArticle = (body, {
   }
 }
 exports.insertArticle = (article) => {
-  const { author, title, body, topic } = article
+  const { author, title, body, topic } = article;
+
   return connection('articles')
     .insert({
       author,

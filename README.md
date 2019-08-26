@@ -56,8 +56,8 @@ module.exports = { ...customConfig[ENV], ...baseConfig };
 ##### To restart the database use the following 
 a) *``npm run setup-dbs``*
 b) *``npm run  migrate-rollback*``*
-c) *``npm migrate-latest``*
-d) *``npm seed run``*
+c) *``npm run migrate-latest``*
+d) *``npm run seed``*
 
 #### Testing 
  9. To make use use of the testing suite, the following developer dependencies are required
