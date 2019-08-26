@@ -438,6 +438,25 @@ describe('/api', () => {
               expect(article.author).to.equal("butter_bridge");
             })
         });
+        it('returns 201 created and the created article,  without the  additional field if sent an article request with an additional field', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "butter_bridge",
+              "title": "trees",
+              "body": "Lorem impsom",
+              "topic": "mitch",
+              "extra_field": "lorem"
+            })
+            .expect(201)
+            .then(({
+              body: {
+                article
+              }
+            }) => {
+              expect(article).to.not.include.key('extra_field');
+            })
+        });
         it('returns 400 and a message if sent an article that does not  include author', () => {
           return request(app)
             .post('/api/articles')
@@ -506,6 +525,72 @@ describe('/api', () => {
             }) => {
               expect(message).to.equal('articles must have author, title, body and topic fields')
             });
+        });
+        it('returns 400 and a message if sent a post article request that does not have a body ', () => {
+          return request(app)
+            .post('/api/articles')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('articles must have author, title, body and topic fields');
+            })
+        });
+        it('returns 400  and a message if sent an article with a none existent author', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "kathy2",
+              "title": "trees",
+              "body": "Lorem impsom",
+              "topic": "mitch"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('author does not exist');
+            })
+        });
+        it('returns 400 and a message if sent an article with a none existent topic', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "butter_bridge",
+              "title": "trees",
+              "body": "Lorem impsom",
+              "topic": "gardening"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('topic does not exist');
+            })
+        });
+        it('returns 400 and a message if sent an article with a none existent author and topic', () => {
+          return request(app)
+            .post('/api/articles')
+            .send({
+              "author": "kathy2",
+              "title": "tees",
+              "body": "Lorem impsom",
+              "topic": "gardening"
+            })
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('topic does not exist');
+            })
         });
       });
     });
