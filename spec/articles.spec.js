@@ -453,7 +453,7 @@ describe('/api', () => {
               }
             }) => {
               console.log(message)
-              expect(message).to.equal('author cannot be null');
+              expect(message).to.equal('author must not be null');
             })
         });
       });

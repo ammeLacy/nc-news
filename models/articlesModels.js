@@ -1,7 +1,8 @@
 const connection = require('../db/connection.js');
 const {
   isValidArticleId,
-  isValidVoteIncrement
+  isValidVoteIncrement,
+  hasAllKeys
 } = require('./modelUtils.js');
 
 //multiple articles
@@ -132,7 +133,12 @@ exports.updateArticle = (body, {
 }
 exports.insertArticle = (article) => {
   const { author, title, body, topic } = article;
-
+  if (author === undefined) {
+    return Promise.reject({
+      status: 400,
+      message: "author must not be null"
+    })
+  }
   return connection('articles')
     .insert({
       author,

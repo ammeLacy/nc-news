@@ -6,7 +6,8 @@ const {
 //requires 
 const {
   isValidVoteIncrement,
-  isValidArticleId
+  isValidArticleId,
+  hasAllKeys
 } = require('../models/modelUtils');
 
 
@@ -62,4 +63,44 @@ describe('isValidArticleId', () => {
     expect(result.length).to.equal(0);
   });
 
+});
+
+describe.only('hasAllKeys', () => {
+  it('returns true when comparting keys of two objects each with one same key ', () => {
+    const key1 = 'key1';
+    const object1 = { key1 };
+    const object2 = { key1 };
+    const actual = hasAllKeys(object1, object2);
+    expect(actual).to.equal(true);
+  });
+  it('returns false when comparing keys of two objects each with one different key ', () => {
+    const object1 = { key1: 1 };
+    const object2 = { key2: 1 };
+    const actual = hasAllKeys(object1, object2);
+    expect(actual).to.equal(false);
+  });
+  it('returns true when comparing keys of two objects each with multiple identical keys', () => {
+    const object1 = { key1: 1, key2: 2 };
+    const object2 = { key1: 1, key2: 2 };
+    const actual = hasAllKeys(object1, object2);
+    expect(actual).to.equal(true);
+  });
+  it('returns false when comparing keys of two objects with multiple unidentical keys', () => {
+    const object1 = { key1: 1, key2: 2 };
+    const object2 = { key3: 1, key4: 2 };
+    const actual = hasAllKeys(object1, object2);
+    expect(actual).to.equal(false);
+  });
+  it('returns false when comparing keys of two objects with a mix of idential and missing keys', () => {
+    const object1 = { key1: 1, key2: 2 };
+    const object2 = { key1: 1 };
+    const actual = hasAllKeys(object1, object2);
+    expect(actual).to.equal(false);
+  });
+  it('returns true when comparing keys of two objects and the second has additional keys to the first', () => {
+    const object1 = { key1: 1, key2: 2 };
+    const object2 = { key1: 1, key2: 2, key3: 3 };
+    const actual = hasAllKeys(object1, object2);
+    expect(actual).to.equal(true);
+  });
 });
