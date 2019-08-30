@@ -106,20 +106,5 @@ console.log(`listening on port ${PORT}`);
 ```
 d) to run the development environment use  *``npm run dev``*
 
-##  Directory Structure
-
-├──  :black_medium_square: controllers
-├──  :black_medium_square: db 
-│   ├──  :black_medium_square:
-│   │   ├──  :black_medium_square: development-data 
-│   │   └──  :black_medium_square: test-data  
-│   ├──  :black_medium_square: migrations
-│   ├──  :black_medium_square: seeds
-│   └──  :black_medium_square: utils
-├── :black_medium_square: errors 
-├── :black_medium_square: models 
-├── :black_medium_square: public 
-├── :black_medium_square: routes
-└── :black_medium_square: spec 
 
 
