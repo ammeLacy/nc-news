@@ -11,13 +11,13 @@ exports.insertComment = (body, {
     username,
     ...fields
   } = body;
-  if (body.username === undefined && body.body === undefined) {
+  if (username === undefined && body.body === undefined) {
     return Promise.reject({
       status: 400,
       message: 'username and body must not be null'
     });
   }
-  if (body.username === undefined) {
+  if (username === undefined) {
     return Promise.reject({
       status: 400,
       message: 'username must not be null'
