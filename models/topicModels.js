@@ -1,12 +1,12 @@
 const connection = require('../db/connection.js');
 
-exports.selectTopics = () => {
+exports.selectTopics = ({ limit }) => {
   return connection.select('*')
+    .limit(parseInt(limit))
     .from('topics');
 }
 
 exports.insertTopic = (body) => {
-
   const { slug, description } = body;
   if (slug === undefined && description === undefined) {
     return Promise.reject({

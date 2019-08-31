@@ -34,6 +34,30 @@ describe('/api', () => {
             expect(topics[0]).to.have.keys('slug', 'description');
           })
       });
+      it('returns 200 and a DEFAULT LIMIT of 3 topics ', () => {
+        return request(app)
+          .get('/api/topics')
+          .expect(200)
+          .then(({
+            body: {
+              topics
+            }
+          }) => {
+            expect(topics.length).to.equal(3);
+          })
+      });
+      it.only('returns 200 and and number of topics specified in the query', () => {
+        return request(app)
+          .get('/api/topics?limit=4')
+          .expect(200)
+          .then(({
+            body: {
+              topics
+            }
+          }) => {
+            expect(topics.length).to.equal(4);
+          })
+      });
       describe('ERRORS', () => {
         it('returns 200 and the default page when sent a query request', () => {
           return request(app)

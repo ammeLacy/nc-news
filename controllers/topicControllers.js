@@ -5,7 +5,7 @@ const {
 
 
 exports.sendTopics = (req, res, next) => {
-  selectTopics()
+  selectTopics(req.query)
     .then(topics => {
       res.status(200).send({
         topics

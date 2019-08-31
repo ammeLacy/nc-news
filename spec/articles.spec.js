@@ -391,7 +391,7 @@ describe('/api', () => {
         });
       });
     });
-    describe.only('POST', () => {
+    describe('POST', () => {
       it('returns 201 and the created artice', () => {
         return request(app)
           .post('/api/articles')
@@ -471,7 +471,6 @@ describe('/api', () => {
                 message
               }
             }) => {
-              console.log(message)
               expect(message).to.equal('articles must have author, title, body and topic fields');
             })
         });
