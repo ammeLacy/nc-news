@@ -46,7 +46,7 @@ describe('/api', () => {
             expect(topics.length).to.equal(3);
           })
       });
-      it.only('returns 200 and and number of topics specified in the query', () => {
+      it('returns 200 and a number of topics specified in the query', () => {
         return request(app)
           .get('/api/topics?limit=4')
           .expect(200)
@@ -56,6 +56,37 @@ describe('/api', () => {
             }
           }) => {
             expect(topics.length).to.equal(4);
+          })
+      });
+      it('returns 200 and the default limit of the topics that have the most articles in descending order', () => {
+        return request(app)
+          .get('/api/topics?sort_by=article_count')
+          .expect(200)
+          .then(({
+            body: {
+              topics
+            }
+          }) => {
+            expect(topics.length).to.equal(3);
+            expect(topics[0].article_count).to.equal(11);
+            expect(topics[2].article_count).to.equal(1);
+            expect(topics).to.be.sortedBy('article_count', { descending: true })
+
+          })
+      });
+      it.only('returns 200 and a specified limit of topics sorted in descending order  for the most number of articles', () => {
+        return request(app)
+          .get('/api/topics?sort_by=article_count&&limit=4')
+          .expect(200)
+          .then(({
+            body: {
+              topics
+            }
+          }) => {
+            expect(topics.length).to.equal(4);
+            expect(topics[0].article_count).to.equal(11);
+            expect(topics[3].article_count).to.equal(0);
+            expect(topics).to.be.sortedBy('article_count', { descending: true });
           })
       });
       describe('ERRORS', () => {
@@ -70,6 +101,22 @@ describe('/api', () => {
             }) => {
               expect(topics[0].slug).to.eql('mitch');
             })
+        });
+        it('returns 400 and a message when given an invalid limit', () => {
+          const invalidInputs = ['a', 1.5, -3];
+          const invalidLimits = invalidInputs.map(input => {
+            return request(app)
+              .get(`/api/topics?limit=${input}`)
+              .expect(400)
+              .then(({
+                body: {
+                  message
+                }
+              }) => {
+                expect(message).to.equal('limit must be an integer')
+                return Promise.all(invalidLimits);
+              })
+          })
         });
         it('returns 404 when given an incorrect path', () => {
           return request(app)
