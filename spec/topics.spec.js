@@ -74,7 +74,7 @@ describe('/api', () => {
 
           })
       });
-      it.only('returns 200 and a specified limit of topics sorted in descending order  for the most number of articles', () => {
+      it('returns 200 and a specified limit of topics sorted in descending order for the most number of articles', () => {
         return request(app)
           .get('/api/topics?sort_by=article_count&&limit=4')
           .expect(200)
@@ -90,7 +90,7 @@ describe('/api', () => {
           })
       });
       describe('ERRORS', () => {
-        it('returns 200 and the default page when sent a query request', () => {
+        it('returns 200 and the default limit of 3 when sent any query requests except sortBy ', () => {
           return request(app)
             .get('/api/topics?greatTopic=true')
             .expect(200)
@@ -99,7 +99,20 @@ describe('/api', () => {
                 topics
               }
             }) => {
-              expect(topics[0].slug).to.eql('mitch');
+              expect(topics[0].slug).to.equal('mitch');
+              expect(topics.length).to.equal(3);
+            })
+        });
+        it('returns 200 and descending order if passed an invalid order for displaying the topics by article count and a valid limit', () => {
+          return request(app)
+            .get('/api/topics?sort_by=asc')
+            .expect(200)
+            .then(({
+              body: {
+                topics
+              }
+            }) => {
+              expect(topics).to.not.be.sortedBy('article_count', { descending: true });
             })
         });
         it('returns 400 and a message when given an invalid limit', () => {
@@ -123,7 +136,6 @@ describe('/api', () => {
             .get('/api/invalid_topic_route')
             .expect(404);
         });
-
       });
     });
     describe('/POST', () => {
