@@ -1,10 +1,10 @@
 const connection = require('../db/connection.js');
 const {
-  isValidArticleId,
+  isValidId,
 } = require('./modelUtils.js');
 
 exports.selectTopics = ({ limit = 3, sort_by }) => {
-  if (limit !== undefined && !isValidArticleId(limit)) {
+  if (limit !== undefined && !isValidId(limit)) {
     return Promise.reject({
       status: 400,
       message: "limit must be an integer"

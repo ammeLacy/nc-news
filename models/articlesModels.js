@@ -1,6 +1,6 @@
 const connection = require('../db/connection.js');
 const {
-  isValidArticleId,
+  isValidId,
   isValidVoteIncrement,
   hasAllKeys
 } = require('./modelUtils.js');
@@ -17,7 +17,7 @@ exports.selectArticles = ({
   if (order !== 'asc') {
     order = 'desc'
   }
-  if (!isValidArticleId(limit)) {
+  if (!isValidId(limit)) {
     return Promise.reject({
       status: 400,
       message: "limit should be whole numbers"
@@ -27,7 +27,7 @@ exports.selectArticles = ({
     if (!permittedQueries.includes(sort_by)) {
       sort_by = 'created_at';
     }
-    if (!isValidArticleId(p)) {
+    if (!isValidId(p)) {
       return Promise.reject({
         status: 400,
         message: "page numbers should be whole numbers"
@@ -82,7 +82,7 @@ exports.selectArticlesCount = ({
 exports.selectArticle = (
   article_id
 ) => {
-  if (!isValidArticleId(article_id)) {
+  if (!isValidId(article_id)) {
     return Promise.reject({
       status: 400,
       message: 'Invalid article id'
@@ -107,7 +107,7 @@ exports.updateArticle = (body, {
   const {
     inc_votes
   } = body;
-  if (!isValidArticleId(article_id)) {
+  if (!isValidId(article_id)) {
     return Promise.reject({
       status: 400,
       message: 'Invalid article_id'

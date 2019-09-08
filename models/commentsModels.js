@@ -1,6 +1,6 @@
 const connection = require('../db/connection.js');
 const {
-  isValidArticleId,
+  isValidId,
   isValidVoteIncrement
 } = require('./modelUtils.js');
 
@@ -50,7 +50,7 @@ exports.selectComments = ({
   if (order !== 'asc') {
     order = 'desc'
   }
-  if (!isValidArticleId(limit)) {
+  if (!isValidId(limit)) {
     return Promise.reject({
       status: 400,
       message: 'limit must be a whole number'
@@ -61,7 +61,7 @@ exports.selectComments = ({
     sort_by = 'created_at';
   }
   const offset = (p - 1) * limit;
-  if (!isValidArticleId(p)) {
+  if (!isValidId(p)) {
     return Promise.reject({
       status: 400,
       message: 'page numbers must be a whole number'
@@ -84,7 +84,7 @@ exports.updateComment = (
   const {
     inc_votes
   } = body;
-  if (!isValidArticleId(comment_id)) {
+  if (!isValidId(comment_id)) {
     return Promise.reject({
       status: 400,
       message: 'Invalid comment_id'
@@ -112,7 +112,7 @@ exports.updateComment = (
 exports.deleteComment = ({
   comment_id
 }) => {
-  if (!isValidArticleId(comment_id)) {
+  if (!isValidId(comment_id)) {
     return Promise.reject({
       status: 400,
       message: 'Invalid comment_id'

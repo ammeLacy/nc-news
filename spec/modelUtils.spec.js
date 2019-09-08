@@ -6,7 +6,7 @@ const {
 //requires 
 const {
   isValidVoteIncrement,
-  isValidArticleId,
+  isValidId,
   hasAllKeys
 } = require('../models/modelUtils');
 
@@ -36,27 +36,27 @@ describe('isValidVoteIncrement', () => {
   });
 });
 
-describe('isValidArticleId', () => {
+describe('isValidId', () => {
   it('returns true when given a valid articleId', () => {
-    const actual = isValidArticleId(1);
+    const actual = isValidId(1);
     expect(actual).to.equal(true);
 
     const validId = [1, 3, 9, 999];
     const result = [];
     validId.forEach(element => {
-      if (isValidArticleId(element)) {
+      if (isValidId(element)) {
         return (result.push(element))
       }
     });
     expect(result.length).to.equal(validId.length);
   });
   it('returns false when given an invalid article_Id', () => {
-    const actual = isValidArticleId("a");
+    const actual = isValidId("a");
     expect(actual).to.equal(false);
     const invalid_id = ['a', '1a', 1.5, -99, '/', '\\', '?', '@', '&', '#', '~', '(', ')', '{', '}', '^', '$', '+', '\'', '!', '*', '%'];
     const result = [];
     invalid_id.forEach(element => {
-      if (isValidArticleId(element)) {
+      if (isValidId(element)) {
         return (result.push(element));
       }
     });
