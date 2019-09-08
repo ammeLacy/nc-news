@@ -1,12 +1,8 @@
 exports.routeError = (req, res, next) => {
-  //console.log('<<<<<<<< ROUTE ERROR')
   res.status(404).send();
 }
 
 exports.SQLerrors = (err, req, res, next) => {
-  //console.log("<<<<<<<<< SQL ERRORS");
-  console.log(err.message);
-  //console.log(err.code)
   if (err.code) {
     const errCodes = {
       42703: err.message, // column does not exist
@@ -49,9 +45,7 @@ exports.send405Error = (req, res, next) => {
 };
 
 exports.customErrors = (err, req, res, next) => {
-  //console.log('customErrors')
   if (err.status) {
-    //console.log(err)
     res.status(err.status).send({
       message: err.message
     });
@@ -61,8 +55,6 @@ exports.customErrors = (err, req, res, next) => {
 }
 
 exports.serverError = (err, req, res, next) => {
-  //console.log("<<<<<<< SERVER ERROR");
-  //console.log(err)
   res.status(500).send({
     message: 'internal server error'
   });
