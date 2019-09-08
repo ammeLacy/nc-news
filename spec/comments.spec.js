@@ -170,141 +170,141 @@ describe('/api', () => {
             expect(comments.length).to.equal(2);
           })
       });
-    });
-    it('returns 404 when given a valid format article id for an article that does not exist', () => {
-      return request(app)
-        .get('/api/articles/1000/comments')
-        .expect(404);
-    });
-    describe('ERRORS', () => {
-      it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
+      it('returns 404 when given a valid format article id for an article that does not exist', () => {
         return request(app)
-          .get('/api/articles/15/comments?sort_by=invalid_query')
-          .expect(200)
-          .then(({
-            body: {
-              comments
-            }
-          }) => {
-            expect(comments).to.be.sortedBy('created_at', {
-              descending: true
-            });
-          })
-      });
-      it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
-        return request(app)
-          .get('/api/articles/15/comments?sort_by=author&sort_by=createdat&order=asc')
-          .expect(200)
-          .then(({
-            body: {
-              comments
-            }
-          }) => {
-            expect(comments).to.be.sortedBy('author');
-          })
-      });
-      it('returns 200 and if passed an invalid order for displaying the comments and defaults to descending', () => {
-        return request(app)
-          .get('/api/articles/15/comments?order=up')
-          .expect(200)
-          .then(({
-            body: {
-              comments
-            }
-          }) => {
-            expect(comments).to.be.sortedBy('created_at', {
-              descending: true
-            });
-          })
-      });
-      it('returns 400 and a message if an invalid format for the article-id is sent', () => {
-        return request(app)
-          .get('/api/articles/1a/comments')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('invalid input syntax for integer: "1a"');
-          })
-      });
-      it('returns 400 and message if passed an invalid limit - floating point number ', () => {
-        return request(app)
-          .get('/api/articles/1/comments?limit=1.5')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('limit must be a whole number');
-          })
-      });
-      it('returns 400 and a message if passed an invalid limit - negative number', () => {
-        return request(app)
-          .get('/api/articles/1/comments?limit=-1')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('limit must be a whole number');
-          })
-      });
-      it('returns 400 and a message if passed an invalid limit - string', () => {
-        return request(app)
-          .get('/api/articles/1/comments?limit=a')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('limit must be a whole number');
-          })
-      });
-      it('returns 400 and a message if passed an invalid page number - floating point number', () => {
-        return request(app)
-          .get('/api/articles/1/comments?p=0.5')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('page numbers must be a whole number');
-          })
-      });
-      it('returns 400 and a message if passed an invalid page number - negative number', () => {
-        return request(app)
-          .get('/api/articles/1/comments?p=-1')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('page numbers must be a whole number');
-          })
-      });
-      it('returns 400 and a message if passed an invalid page number - string', () => {
-        return request(app)
-          .get('/api/articles/1/comments?p=a')
-          .expect(400)
-          .then(({
-            body: {
-              message
-            }
-          }) => {
-            expect(message).to.equal('page numbers must be a whole number')
-          })
-      });
-      it('returns 404 if an invalid route is sent', () => {
-        return request(app)
-          .get('/api/articles/1/comment')
+          .get('/api/articles/1000/comments')
           .expect(404);
+      });
+      describe('ERRORS', () => {
+        it('returns 200 and and default sort order of created_at when passed an invalid column to query by', () => {
+          return request(app)
+            .get('/api/articles/15/comments?sort_by=invalid_query')
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy('created_at', {
+                descending: true
+              });
+            })
+        });
+        it('returns 200 and ignores additional queries passed in and returns the contents of the first queries if they are valid', () => {
+          return request(app)
+            .get('/api/articles/15/comments?sort_by=author&sort_by=createdat&order=asc')
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy('author');
+            })
+        });
+        it('returns 200 and if passed an invalid order for displaying the comments and defaults to descending', () => {
+          return request(app)
+            .get('/api/articles/15/comments?order=up')
+            .expect(200)
+            .then(({
+              body: {
+                comments
+              }
+            }) => {
+              expect(comments).to.be.sortedBy('created_at', {
+                descending: true
+              });
+            })
+        });
+        it('returns 400 and a message if an invalid format for the article-id is sent', () => {
+          return request(app)
+            .get('/api/articles/1a/comments')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('invalid input syntax for integer: "1a"');
+            })
+        });
+        it('returns 400 and message if passed an invalid limit - floating point number ', () => {
+          return request(app)
+            .get('/api/articles/1/comments?limit=1.5')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('limit must be a whole number');
+            })
+        });
+        it('returns 400 and a message if passed an invalid limit - negative number', () => {
+          return request(app)
+            .get('/api/articles/1/comments?limit=-1')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('limit must be a whole number');
+            })
+        });
+        it('returns 400 and a message if passed an invalid limit - string', () => {
+          return request(app)
+            .get('/api/articles/1/comments?limit=a')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('limit must be a whole number');
+            })
+        });
+        it('returns 400 and a message if passed an invalid page number - floating point number', () => {
+          return request(app)
+            .get('/api/articles/1/comments?p=0.5')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('page numbers must be a whole number');
+            })
+        });
+        it('returns 400 and a message if passed an invalid page number - negative number', () => {
+          return request(app)
+            .get('/api/articles/1/comments?p=-1')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('page numbers must be a whole number');
+            })
+        });
+        it('returns 400 and a message if passed an invalid page number - string', () => {
+          return request(app)
+            .get('/api/articles/1/comments?p=a')
+            .expect(400)
+            .then(({
+              body: {
+                message
+              }
+            }) => {
+              expect(message).to.equal('page numbers must be a whole number')
+            })
+        });
+        it('returns 404 if an invalid route is sent', () => {
+          return request(app)
+            .get('/api/articles/1/comment')
+            .expect(404);
+        });
       });
     });
   });
@@ -482,7 +482,6 @@ describe('/api', () => {
     });
   });
 });
-
 
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
