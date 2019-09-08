@@ -10,7 +10,6 @@ const {
   hasAllKeys
 } = require('../models/modelUtils');
 
-
 describe('isValidVoteIncrement', () => {
   it('returns true when given a valid vote format', () => {
     const validVotes = [1, 3, 99, 1000, -99];
