@@ -3,7 +3,7 @@
     "description": "serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/articles": {
-    "description": "serves an articles array of article objects, which shave the following properties:",
+    "description": "serves an articles array of article objects, which have the following properties, with a default limit of 10",
     "queries": [
       "author",
       "topic",

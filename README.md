@@ -8,15 +8,11 @@ An API for interacting with the nc_news application which uses a PostgresSQL. In
 ## Installation 
 #### Git
  1. On GitHub if you require your own repository set that up before cloning the repository
-  2. Clone the repo from https://github.com/ammeLacy/nc-news and then (if requiring your own repository *git remote remove origin* then **<YOUR-GITHUB_URL>**) git remote add origin 
+ 2. Clone the repo from https://github.com/ammeLacy/nc-news and then (if requiring your own repository *git remote remove origin* then **<YOUR-GITHUB_URL>**) git remote add origin 
   #### Dependencies
-  3. The project provides the following dependencies
-      - express : 4.17.1
-	 - knex: 0.19.0
-	 - pg 7.11.0
-*`` run npm install``*
+ 3. Use *``npm i``* to install the project dependencies
  #### Configuration 
- 4.  While the dependencies are installing open the .gitignore  file and add the following *knexfile.js*
+ 4. While the dependencies are installing open the .gitignore  file and add the following *knexfile.js*
  5. Create the knexfile.js in the root directory and add the following 
 
 ```
@@ -71,7 +67,7 @@ run ``npm i -D mocha chai chai chai-sorted supertest``*
 ##### Testing explanation 
 All tests exist in the spec folder and are split into the following 
 
- - Files devoted to tests for the functions required to manipulate the data from data files into the database, 
+ - Testing for the functions required to manipulate the data from data files into the database,
  - Tests per end-point 
  - Testing for utility functions required by the models. 
 ```
@@ -94,17 +90,8 @@ Each file is further divided into path, functionality for each path and correspo
  - To run **all** tests use *``npm t ``*
  
  ***Optional*** to host the application locally 
-a) install as a dev dependency nodemon: 1.19.1 *``npm -D nodemon``* 
-b) create a *listen.js* file in the root folder 
-c) in the *listen.js* file insert the following 
-```
-const app = require('./app');
-const PORT = 9090; // or other available port
-app.listen(PORT,() => {
-console.log(`listening on port ${PORT}`);
-});
-```
-d) to run the development environment use  *``npm run dev``*
+a) Install nodemon as a dev dependency *``npm -D nodemon``* 
+b) To run the development environment use  *``npm run dev``*
 
 
 

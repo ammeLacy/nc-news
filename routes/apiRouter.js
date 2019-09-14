@@ -9,5 +9,4 @@ apiRouter.use('/users', usersRouter);
 apiRouter.use('/articles/:article_id/comments', commentsRouter);
 apiRouter.use('/comments', commentsRouter)
 apiRouter.use('/articles', articlesRouter);
-//apiRouter.get('/api');
 module.exports = apiRouter;
