@@ -18,14 +18,10 @@ exports.sendArticles = (req, res, next) => {
       req.query
     )
       .then(articles => {
-        if (articles.length === 0) {
-          res.status(404).send();
-        } else {
-          res.status(200).send({
-            total_count,
-            articles
-          })
-        }
+        res.status(200).send({
+          total_count,
+          articles
+        })
       }).catch(err => next(err))
   ).catch(err => next(err));
 }

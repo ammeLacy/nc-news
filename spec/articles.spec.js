@@ -273,15 +273,29 @@ describe('/api', () => {
             expect(articles.length).equals(2);
           })
       });
-      it('returns 404 when a non existant author is given', () => {
+      it('returns 200 and an empty list when a non existant author is given', () => {
         return request(app)
           .get('/api/articles?author=butter_bridger')
-          .expect(404);
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.length).equals(0);
+          })
       });
-      it('returns 404 when a none existant topic is given ', () => {
+      it('returns 200 and an empty list when a non existant topic is given ', () => {
         return request(app)
           .get('/api/articles?topic=trees')
-          .expect(404);
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.length).equals(0);
+          })
       });
       describe('ERRORS', () => {
         it('returns 200 and DEFFAULT SORT ORDER of CREATED_AT when passed an none-existent column to query by', () => {
