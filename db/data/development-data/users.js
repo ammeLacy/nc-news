@@ -17,7 +17,7 @@ module.exports = [
   {
     username: 'cooljmessy',
     name: 'Peter Messy',
-    avatar_url: 'https://i.imgur.com/WfX0Neu.jpg',
+    avatar_url: '/messy.jpg',
   },
   {
     username: 'weegembump',
