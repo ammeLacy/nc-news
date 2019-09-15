@@ -2,7 +2,7 @@ module.exports = [
   {
     username: 'tickle122',
     name: 'Tom Tickle',
-    avatar_url: 'https://www.spiritsurfers.net/monastery/wp-content/uploads/_41500270_mrtickle.jpg',
+    avatar_url: '/tickle.jpg',
   },
   {
     username: 'grumpy19',
