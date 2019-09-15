@@ -8,7 +8,7 @@ An API for interacting with the nc_news application which uses a PostgresSQL. In
 ## Installation 
 #### Git
  1. On GitHub if you require your own repository set that up before cloning the repository
- 2. Clone the repo from https://github.com/ammeLacy/nc-news and then (if requiring your own repository *git remote remove origin* then **<YOUR-GITHUB_URL>**) git remote add origin 
+ 2. Clone the repo from https://github.com/ammeLacy/nc-news 
   #### Dependencies
  3. Use *``npm i``* to install the project dependencies
  #### Configuration 
