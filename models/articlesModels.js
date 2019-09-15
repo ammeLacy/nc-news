@@ -34,13 +34,14 @@ exports.selectArticles = ({
       })
     }
     const offset = (p - 1) * limit;
-    return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
+    return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes', 'users.avatar_url')
       .count({
         comment_count: 'comment_id'
       })
       .from('articles')
       .leftJoin('comments', 'articles.article_id', 'comments.article_id')
-      .groupBy('articles.article_id').orderBy(sort_by, order)
+      .leftJoin('users', 'articles.author', 'users.username')
+      .groupBy('articles.article_id', 'users.avatar_url').orderBy(sort_by, order)
       .limit(limit)
       .offset(offset)
       .modify((query) => {

@@ -12,7 +12,7 @@ describe('/api', () => {
   beforeEach(() => connection.seed.run());
   describe('/articles', () => {
     describe('GET', () => {
-      it('returns  200 and an array of article objects, each of which has an author, title, article_id, topic, created_at, votes and comment_count keys, ', () => {
+      it('returns  200 and an array of article objects, each of which has an author, title, article_id, topic, created_at, votes ', () => {
         return request(app)
           .get('/api/articles')
           .expect(200)
@@ -46,6 +46,18 @@ describe('/api', () => {
           }) => {
             expect(articles[3]).to.include.key('comment_count');
             expect(parseInt(articles[3].comment_count)).to.equal(0);
+          })
+      });
+      it('returns 200 and user avatar_url', () => {
+        return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({
+            body: {
+              articles
+            }
+          }) => {
+            expect(articles.every(article => article.avatar_url)).to.be.true;
           })
       });
       it('returns 200 and articles sorted by DEFAULT SORT ORDER CREATED_AT and DESCENDING as the DEFAULT ORDER ', () => {
@@ -165,7 +177,6 @@ describe('/api', () => {
           }) => {
             expect(articles.length).to.equal(5);
           })
-
       });
       it('returns 200 all articles for a given author and topic (if they exist), in ascending order with a user specified limit', () => {
         return request(app)
